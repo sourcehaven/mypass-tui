@@ -4,7 +4,6 @@ from textual.widgets import Static
 
 
 class Feedback(Static):
-
     DEFAULT_CSS = """
     Feedback {
         display: none;

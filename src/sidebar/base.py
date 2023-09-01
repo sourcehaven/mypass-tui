@@ -5,7 +5,6 @@ from textual.containers import Container
 
 
 class BaseSideBar(Container):
-
     @abstractmethod
     def _compose(self):
         pass

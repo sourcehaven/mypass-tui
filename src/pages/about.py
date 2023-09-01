@@ -19,7 +19,6 @@ Copyright © {YEAR} {AUTHOR}
 
 
 class AboutPage(Static):
-
     def compose(self) -> ComposeResult:
         yield Label("About MyPass TUI", classes="title")
         yield Markdown(MARKDOWN_TEXT)

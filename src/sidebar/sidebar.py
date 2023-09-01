@@ -4,6 +4,5 @@ from .base import BaseSideBar
 
 
 class SideBar(BaseSideBar):
-
     def _compose(self):
-        yield Label('Hello')
+        yield Label("Hello")

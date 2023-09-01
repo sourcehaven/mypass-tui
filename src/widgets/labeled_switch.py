@@ -2,7 +2,6 @@ from textual.widgets import Label, Static, Switch
 
 
 class LabeledSwitch(Static):
-
     DEFAULT_CSS = """
     LabeledSwitch {
         layout: horizontal;
@@ -10,12 +9,12 @@ class LabeledSwitch(Static):
     """
 
     def __init__(
-            self,
-            text: str,
-            gap_size: int,
-            id: str | None = None,
-            classes: str | None = None,
-            name: str | None = None,
+        self,
+        text: str,
+        gap_size: int,
+        id: str | None = None,
+        classes: str | None = None,
+        name: str | None = None,
     ):
         super().__init__(id=id, classes=classes, name=name)
         self.text = text

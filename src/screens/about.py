@@ -5,7 +5,6 @@ from ..pages import AboutPage
 
 
 class AboutScreen(DialogScreen):
-
     DEFAULT_CSS = """
     #dialog {
         max-width: 100;

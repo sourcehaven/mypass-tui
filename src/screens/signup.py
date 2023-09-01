@@ -5,6 +5,5 @@ from src.screens.dialog import DialogScreen
 
 
 class SignUpScreen(DialogScreen):
-
     def _compose(self) -> ComposeResult:
         yield SignUpPage()

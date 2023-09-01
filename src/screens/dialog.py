@@ -23,10 +23,7 @@ class DialogScreen(ModalScreen):
     """
 
     def compose(self) -> ComposeResult:
-        yield Container(
-            *self._compose(),
-            id="dialog"
-        )
+        yield Container(*self._compose(), id="dialog")
 
     @abstractmethod
     def _compose(self):

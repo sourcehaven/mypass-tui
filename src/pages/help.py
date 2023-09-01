@@ -6,6 +6,5 @@ HELP_PAGE_TITLE = "Help"
 
 
 class HelpPage(Static):
-
     def compose(self) -> ComposeResult:
         yield Label("Help", classes="title")

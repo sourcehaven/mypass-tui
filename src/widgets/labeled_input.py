@@ -4,7 +4,6 @@ from src.util.field_label import format_field_text
 
 
 class LabeledInput(Static):
-
     DEFAULT_CSS = """
     LabeledInput {
         layout: horizontal;
@@ -23,13 +22,13 @@ class LabeledInput(Static):
     """
 
     def __init__(
-            self,
-            text: str,
-            length: int = "auto",
-            required=False,
-            id: str | None = None,
-            classes: str | None = None,
-            name: str | None = None,
+        self,
+        text: str,
+        length: int = "auto",
+        required=False,
+        id: str | None = None,
+        classes: str | None = None,
+        name: str | None = None,
     ):
         super().__init__(id=id, classes=classes, name=name)
         self.text = text

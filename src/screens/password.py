@@ -7,8 +7,14 @@ from ..widgets.labeled_input import LabeledInput
 
 
 class PasswordDialog(DialogScreen):
-
-    def __init__(self, title: str, password_label: str, name: str | None = None, id: str | None = None, classes: str | None = None):
+    def __init__(
+        self,
+        title: str,
+        password_label: str,
+        name: str | None = None,
+        id: str | None = None,
+        classes: str | None = None,
+    ):
         super().__init__(name=name, id=id, classes=classes)
         self.title = title
         self.password_label = password_label

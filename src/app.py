@@ -24,7 +24,7 @@ class MyPassApp(App):
         Binding(Keys.F1, HELP_PAGE_ID, HELP_PAGE_TITLE),
         Binding(Keys.F2, ABOUT_PAGE_ID, ABOUT_PAGE_TITLE),
         Binding("p", "password_screen", "Password screen"),
-        Binding("x", "signup_screen", "Sign Up")
+        Binding("x", "signup_screen", "Sign Up"),
     ]
 
     def action_password_screen(self):

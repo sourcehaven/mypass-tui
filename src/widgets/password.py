@@ -2,12 +2,11 @@ from textual import on
 from textual.app import ComposeResult
 from textual.widgets import Static, Input, Button, Label, ProgressBar
 
-SHOW = 'Show'
+SHOW = "Show"
 HIDE = "Hide"
 
 
 class PasswordShowHide(Static):
-
     DEFAULT_CSS = """
     PasswordShowHide {
         layout: horizontal;
@@ -30,12 +29,12 @@ class PasswordShowHide(Static):
     """
 
     def __init__(
-            self,
-            text: str,
-            gap_size: int = 20,
-            id: str | None = None,
-            classes: str | None = None,
-            name: str | None = None,
+        self,
+        text: str,
+        gap_size: int = 20,
+        id: str | None = None,
+        classes: str | None = None,
+        name: str | None = None,
     ):
         super().__init__(id=id, classes=classes, name=name)
         self.text = text
@@ -58,7 +57,6 @@ class PasswordShowHide(Static):
 
 
 class PasswordStrength(Static):
-
     DEFAULT_CSS = """
     #password {
         width: 80%;

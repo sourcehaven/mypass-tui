@@ -12,7 +12,6 @@ GAP_SIZE = 15
 
 
 class SignUpPage(Static):
-
     def compose(self) -> ComposeResult:
         yield Label("Sign Up", classes="title")
 

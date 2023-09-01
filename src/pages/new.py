@@ -11,14 +11,13 @@ NEW_PAGE_ID = "new_page"
 NEW_PAGE_TITLE = "New"
 
 
-SHOW = 'Show'
+SHOW = "Show"
 HIDE = "Hide"
 
 GAP_SIZE = 10
 
 
 class NewEntryPage(Static):
-
     DEFAULT_CSS = """
     #password {
         width: 80%;
