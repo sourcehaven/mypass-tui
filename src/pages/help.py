@@ -1,11 +1,11 @@
 from textual.app import ComposeResult
-from textual.widgets import Label, TabPane
+from textual.widgets import Label, Static
 
-HELP_TAB_ID = "help_tab"
-HELP_TAB_TITLE = "Help"
+HELP_PAGE_ID = "help_page"
+HELP_PAGE_TITLE = "Help"
 
 
-class HelpTabPane(TabPane):
+class HelpPage(Static):
 
     def compose(self) -> ComposeResult:
         yield Label("Help", classes="title")

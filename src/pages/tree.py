@@ -1,13 +1,13 @@
 from textual.app import ComposeResult
-from textual.widgets import TabPane, Tree
+from textual.widgets import Tree, Static
 
 from ..widgets.input_prompt import InputPrompt
 
-TREE_VIEW_TAB_ID = "tree_view_tab"
-TREE_VIEW_TAB_TITLE = "Tree view"
+TREE_VIEW_PAGE_ID = "tree_view_page"
+TREE_VIEW_PAGE_TITLE = "Tree view"
 
 
-class TreeViewTabPane(TabPane):
+class TreeViewPage(Static):
     def compose(self) -> ComposeResult:
         tree: Tree[dict] = Tree("Dune")
         tree.root.expand()

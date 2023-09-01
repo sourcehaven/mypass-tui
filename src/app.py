@@ -1,10 +1,13 @@
 from textual.app import App
 from textual.binding import Binding
 from textual.keys import Keys
-from textual.widgets import Footer, TabbedContent
+from textual.widgets import Footer, TabbedContent, TabPane
 
-from .dialog.password import PasswordDialog
-from .tab import *
+from .pages import *
+from .screens.about import AboutScreen
+from .screens.help import HelpScreen
+from .screens.password import PasswordDialog
+from .screens.signup import SignUpScreen
 
 
 class MyPassApp(App):
@@ -14,13 +17,14 @@ class MyPassApp(App):
         Binding(Keys.ControlC, "quit", "Quit", priority=True),
         Binding("left", "previous_tab", show=False),
         Binding("right", "next_tab", show=False),
-        Binding("1", NEW_TAB_ID, NEW_TAB_TITLE),
-        Binding("2", TABLE_TAB_ID, TABLE_TAB_TITLE),
-        Binding("3", TREE_VIEW_TAB_ID, TREE_VIEW_TAB_TITLE),
-        Binding("4", SETTINGS_TAB_ID, SETTINGS_TAB_TITLE),
-        Binding("5", HELP_TAB_ID, HELP_TAB_TITLE),
-        Binding("6", ABOUT_TAB_ID, ABOUT_TAB_TITLE),
+        Binding("1", NEW_PAGE_ID, NEW_PAGE_TITLE),
+        Binding("2", TABLE_PAGE_ID, TABLE_PAGE_TITLE),
+        Binding("3", TREE_VIEW_PAGE_ID, TREE_VIEW_PAGE_TITLE),
+        Binding("4", SETTINGS_PAGE_ID, SETTINGS_PAGE_TITLE),
+        Binding(Keys.F1, HELP_PAGE_ID, HELP_PAGE_TITLE),
+        Binding(Keys.F2, ABOUT_PAGE_ID, ABOUT_PAGE_TITLE),
         Binding("p", "password_screen", "Password screen"),
+        Binding("x", "signup_screen", "Sign Up")
     ]
 
     def action_password_screen(self):
@@ -28,35 +32,42 @@ class MyPassApp(App):
             pass
 
         self.push_screen(
-            PasswordDialog("Enter your master password"),
+            PasswordDialog("Enter your master password", "Password"),
             password_input,
         )
 
     def compose(self):
-        with TabbedContent(initial=NEW_TAB_ID):
-            yield NewTabPane(NEW_TAB_TITLE, id=NEW_TAB_ID)
-            yield TableViewTabPane(TABLE_TAB_TITLE, id=TABLE_TAB_ID)
-            yield TreeViewTabPane(TREE_VIEW_TAB_TITLE, id=TREE_VIEW_TAB_ID)
-            yield SettingsTabPane(SETTINGS_TAB_TITLE, id=SETTINGS_TAB_ID)
-            yield HelpTabPane(HELP_TAB_TITLE, id=HELP_TAB_ID)
-            yield AboutTabPane(ABOUT_TAB_TITLE, id=ABOUT_TAB_ID)
-
+        yield from self.compose_tabs()
         yield Footer()
 
-    def action_new_tab(self):
-        self.query_one(TabbedContent).active = NEW_TAB_ID
+    def compose_tabs(self):
+        with TabbedContent(initial=NEW_PAGE_ID):
+            with TabPane(NEW_PAGE_TITLE, id=NEW_PAGE_ID):
+                yield NewEntryPage()
+            with TabPane(TABLE_PAGE_TITLE, id=TABLE_PAGE_ID):
+                yield TableViewPage()
+            with TabPane(TREE_VIEW_PAGE_TITLE, id=TREE_VIEW_PAGE_ID):
+                yield TreeViewPage()
+            with TabPane(SETTINGS_PAGE_TITLE, id=SETTINGS_PAGE_ID):
+                yield SettingsPage()
 
-    def action_table_view_tab(self):
-        self.query_one(TabbedContent).active = TABLE_TAB_ID
+    def action_new_page(self):
+        self.query_one(TabbedContent).active = NEW_PAGE_ID
 
-    def action_tree_view_tab(self):
-        self.query_one(TabbedContent).active = TREE_VIEW_TAB_ID
+    def action_table_view_page(self):
+        self.query_one(TabbedContent).active = TABLE_PAGE_ID
 
-    def action_settings_tab(self):
-        self.query_one(TabbedContent).active = SETTINGS_TAB_ID
+    def action_tree_view_page(self):
+        self.query_one(TabbedContent).active = TREE_VIEW_PAGE_ID
 
-    def action_help_tab(self):
-        self.query_one(TabbedContent).active = HELP_TAB_ID
+    def action_settings_page(self):
+        self.query_one(TabbedContent).active = SETTINGS_PAGE_ID
 
-    def action_about_tab(self):
-        self.query_one(TabbedContent).active = ABOUT_TAB_ID
+    def action_help_page(self):
+        self.push_screen(HelpScreen())
+
+    def action_about_page(self):
+        self.push_screen(AboutScreen())
+
+    def action_signup_screen(self):
+        self.push_screen(SignUpScreen())

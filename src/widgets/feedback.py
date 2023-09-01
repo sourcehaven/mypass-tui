@@ -4,6 +4,16 @@ from textual.widgets import Static
 
 
 class Feedback(Static):
+
+    DEFAULT_CSS = """
+    Feedback {
+        display: none;
+        margin: 0 1;
+        padding: 0 1;
+        background: $boost;
+    }
+    """
+
     async def show(self, text: str, seconds: int):
         self.update(text)
         self.display = True
@@ -12,8 +22,16 @@ class Feedback(Static):
 
 
 class ErrorFeedback(Feedback):
-    pass
+    DEFAULT_CSS = """
+    ErrorFeedback {
+        background: red 40%;
+    }
+    """
 
 
 class SuccessFeedback(Feedback):
-    pass
+    DEFAULT_CSS = """
+    SuccessFeedback {
+        background: green 40%;
+    }
+    """
