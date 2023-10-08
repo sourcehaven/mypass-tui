@@ -1,1 +1,1 @@
-from .app import MyPassApp
+from .ui.app import MyPassApp
