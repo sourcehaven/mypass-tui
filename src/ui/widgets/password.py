@@ -9,7 +9,7 @@ from textual.containers import Horizontal
 from textual.widgets import ProgressBar, Label, Static
 
 from .epic_input import EpicInput
-from ...model.password import PasswordStrength as PasswordStrengthEnum, default_get_password_strength
+import src.model.password as mpw
 
 from ...settings import bindings, settings
 
@@ -32,7 +32,7 @@ class PasswordStrengthBar(ProgressBar):
         disabled: bool = False,
     ):
         super().__init__(
-            total=len(PasswordStrengthEnum) - 1,
+            total=len(mpw.PasswordStrength) - 1,
             show_eta=False,
             show_percentage=False,
             name=name,
@@ -62,7 +62,7 @@ class PasswordStrength(Static):
     }
     """
 
-    strength_function: Callable[[str], PasswordStrengthEnum] = default_get_password_strength
+    strength_function: Callable[[str], mpw.PasswordStrength] = mpw.default_get_password_strength
 
     def compose(self) -> ComposeResult:
         self.bar = PasswordStrengthBar()
@@ -86,14 +86,17 @@ class Password(EpicInput):
         Binding(bindings["password_visibility"], "show_hide", show=False)
     ]
 
-    def set_hint(self, show=True):
-        show_hide = "show" if show else "hide"
-        self.border_subtitle = f"Press [bold]{bindings['password_visibility']}[/bold] to [bold][italic]{show_hide}[/italic][/bold] password"
+    def _set_hint(self, show=True):
+        self.border_subtitle = (
+            f"Press [bold]{bindings['password_visibility']}[/bold] "
+            f"to [bold][italic]{'show' if show else 'hide'}[/italic][/bold] password"
+        )
 
     def __init__(
         self,
-        value: str | None = None,
+        value: str = None,
         placeholder: str = "",
+        password: bool = True,
         strength_bar: PasswordStrength = None,
         *,
         suggester: Suggester | None = None,
@@ -106,7 +109,7 @@ class Password(EpicInput):
         super().__init__(
             value=value,
             placeholder=placeholder,
-            password=True,
+            password=password,
             suggester=suggester,
             validators=validators,
             name=name,
@@ -116,11 +119,11 @@ class Password(EpicInput):
         )
         self.password_mask = settings["password_mask"]
         self.strength_bar = strength_bar
-        self.set_hint(show=True)
+        self._set_hint(show=True)
 
     def action_show_hide(self):
         self.password = not self.password
-        self.set_hint(self.password)
+        self._set_hint(self.password)
 
     def on_input_changed(self, changed_input: Input.Changed):
         if self.strength_bar:

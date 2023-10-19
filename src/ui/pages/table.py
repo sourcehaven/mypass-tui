@@ -1,12 +1,6 @@
-
-
 from textual.app import ComposeResult
-from textual.containers import Container
-from textual.reactive import reactive
-from textual.widgets import Static, Label, Input
+from textual.widgets import Static, Input
 
-from ..widgets import LabeledInput, InputLabel
-from ..widgets.input_prompt import InputPrompt
 from ..widgets.vault_table import VaultTable
 from ... import session
 

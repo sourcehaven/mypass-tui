@@ -6,20 +6,17 @@ class Password(UserString):
     mask = "••••••••"
 
     def __init__(self, _value: str, /, hide=True):
+        if _value is None:
+            _value = ""
+
         super().__init__(_value)
-        self._hide = hide
+        self.is_hidden = hide
 
     def __str__(self):
-        return Password.mask if self._hide else self.data
+        return Password.mask if self.is_hidden else self.data
 
     def toggle(self):
-        self._hide = not self._hide
-
-    def reveal(self):
-        self._hide = False
-
-    def hide(self):
-        self._hide = True
+        self.is_hidden = not self.is_hidden
 
 
 class PasswordStrength(Enum):

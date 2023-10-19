@@ -1,15 +1,15 @@
 from textual.containers import ScrollableContainer
 from textual.widgets import Button, Switch
 
-from ..util.format import snake_case_text_to_sentence
+import src.model.password as mpw
 from ..widgets.epic_input import EpicInput
 from ..widgets.feedback import show_feedback_on_error, Feedback
 from ...exception.validator import RequiredException, ValidatorException
 from ...model.input_info import InputInfo
-from ...model.password import Password as ModelPassword
 from ...ui.screens.secondary import DialogScreen
 from ...ui.widgets.input_label import InputLabel, LabeledInput, get_invalid_fields
 from ...ui.widgets.password import Password
+from ...utils.string import snake_case_text_to_sentence
 
 
 class InputScreen(DialogScreen):
@@ -51,8 +51,8 @@ class InputScreen(DialogScreen):
 
             if isinstance(value, str):
                 input_widget = EpicInput(id=info.name, value=value, classes="labeled_input")
-            elif isinstance(value, ModelPassword):
-                input_widget = Password(id=info.name, value=value.data, classes="labeled_input")
+            elif isinstance(value, mpw.Password):
+                input_widget = Password(id=info.name, value=value.data, password=value.is_hidden, classes="labeled_input")
             elif isinstance(value, bool):
                 input_widget = Switch(id=info.name, value=value, animate=True)
             else:
@@ -76,5 +76,5 @@ class InputScreen(DialogScreen):
             raise RequiredException(invalid_fields)
         else:
             from ..util.scrape import scrape_inputs
-            inputs = scrape_inputs(self)
+            inputs = scrape_inputs(self, password_to_string=False)
             self.dismiss(inputs)

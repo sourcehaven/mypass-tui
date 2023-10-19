@@ -1,4 +1,11 @@
+from collections import UserString
 from typing import SupportsIndex
+
+
+def to_string(val: str | UserString):
+    if isinstance(val, UserString):
+        return val.data
+    return val
 
 
 def rreplace(s: str, __old: str, __new: str, __count: SupportsIndex = 1):
@@ -29,3 +36,9 @@ def rreplace(s: str, __old: str, __new: str, __count: SupportsIndex = 1):
 
 def replace_empty_string_with_none(val: str | None):
     return val if val != "" else None
+
+
+def snake_case_text_to_sentence(text: str):
+    words = text.split('_')
+    words[0] = words[0].capitalize()
+    return " ".join(words)

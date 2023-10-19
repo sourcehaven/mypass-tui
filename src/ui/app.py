@@ -28,9 +28,9 @@ class MyPassApp(App):
         Binding(bindings["quit"], "quit", "Quit", priority=True),
         Binding(bindings["key_bindings"], "key_bindings", "Key bindings", priority=True),
         Binding(bindings["settings"], "settings", "Settings", priority=True),
+        Binding(bindings["theme"], "toggle_dark", "Theme", show=True),
         Binding(bindings["help"], HELP_PAGE_ID, HELP_PAGE_TITLE),
         Binding(bindings["about"], ABOUT_PAGE_ID, ABOUT_PAGE_TITLE),
-        Binding(bindings["theme"], "toggle_dark", "Theme", show=True),
         Binding("left", "previous_tab", show=False),
         Binding("right", "next_tab", show=False),
     ]

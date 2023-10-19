@@ -1,4 +1,4 @@
-from functools import cached_property
+from collections import UserString
 from itertools import cycle
 from typing import Iterable, Literal, Callable
 
@@ -7,14 +7,13 @@ from textual.binding import Binding
 from textual.widgets import DataTable
 from textual.widgets._data_table import RowKey
 
-from .input_prompt import InputPrompt
 from ..screens.input import InputScreen
 from ... import session
 from ...model.input_info import InputInfo
 from ...model.vault_entry import VaultEntry
 from ...model.password import Password
 from ...settings import bindings
-
+from ...utils.string import snake_case_text_to_sentence, to_string
 
 cursors = cycle(["row", "column", "cell"])
 
@@ -22,7 +21,8 @@ cursors = cycle(["row", "column", "cell"])
 def callback(row_key: RowKey):
     def wrapper1(func: Callable[[str, dict], None]):
         def wrapper2(fields: dict[str, str]):
-            func(row_key.value, fields)
+            if fields:
+                func(row_key.value, fields)
         return wrapper2
     return wrapper1
 
@@ -33,7 +33,7 @@ class VaultTable(DataTable):
         Binding(bindings["select"], "select_cursor", "Select", show=False),
         Binding(bindings["copy"], "clipboard_copy", "Copy to clipboard", show=False),
         Binding(bindings["table_mode"], "table_mode"),
-        Binding(bindings["password_visibility"], "password_visibility", "Select", show=False),
+        Binding(bindings["password_visibility"], "password_visibility", "Show/hide password", show=False),
     ]
 
     def __init__(
@@ -63,12 +63,20 @@ class VaultTable(DataTable):
             name=name, id=id, classes=classes, disabled=disabled
         )
 
-        for column in VaultEntry.FIELDS:
-            self.add_column(column.capitalize(), key=column)
+        for field in VaultEntry.FIELDS:
+            self.add_column(snake_case_text_to_sentence(field), key=field)
 
         self.row_counter = 1
         self.vault_entries = {}
         self.add_entries(*vault_entries)
+
+    @property
+    def column_names(self):
+        return tuple(key.label.plain for key in self.columns.values())
+
+    @property
+    def column_keys(self):
+        return tuple(key.value for key in self.columns.keys())
 
     def add_entries(self, *vault_entries: VaultEntry):
         for entry in vault_entries:
@@ -81,7 +89,7 @@ class VaultTable(DataTable):
             self.vault_entries[key] = entry
             self.row_counter += 1
 
-    def update_cells(self, id: str, fields: dict[str, str]):
+    def update_cells(self, id: str, fields: dict[str, str | UserString]):
         for column_key, cell_value in fields.items():
             self.update_cell(
                 row_key=id,
@@ -89,6 +97,9 @@ class VaultTable(DataTable):
                 value=cell_value,
                 update_width=True,
             )
+
+        fields = {field: to_string(value) for field, value in fields.items()}
+
         session.user.vault_update(id=id, fields=fields)
 
     def on_data_table_cell_selected(self, selected_cell: DataTable.CellSelected):
@@ -108,14 +119,14 @@ class VaultTable(DataTable):
         values = self.get_row_at(selected_row.cursor_row)
         inputs = [
             InputInfo(name=col, value=val, required=req)
-            for col, val, req in zip(VaultEntry.FIELDS, values, VaultEntry.REQUIRED)
+            for col, val, req in zip(self.column_names, values, VaultEntry.REQUIRED)
         ]
         self.app.push_screen(
             InputScreen(title="Edit", inputs=inputs),
             callback=callback(row_key)(self.update_cells),
         )
 
-    def prompt_text(self, text):
+    def prompt_placeholder(self, text):
         prompt = self.screen.query_one("#table_prompt")
         prompt.placeholder = text
 
@@ -123,39 +134,34 @@ class VaultTable(DataTable):
         def get_value():
             if self.cursor_type == "cell":
                 value = self.get_cell_at(self.cursor_coordinate)
-                self.prompt_text(
-                    f"{VaultEntry.FIELDS[self.cursor_coordinate.column].capitalize()} "
+                self.prompt_placeholder(
+                    f"{self.column_names[self.cursor_coordinate.column]} "
                     f"in row {self.cursor_coordinate.row+1} copied to clipboard"
                 )
-                return value.data if isinstance(value, Password) else value
+                return to_string(value)
             if self.cursor_type == "row":
-                self.prompt_text(f"Row {self.cursor_row} copied to clipboard")
-                return ",".join(str(e) for e in self.get_row_at(self.cursor_row))
+                self.prompt_placeholder(f"Row {self.cursor_row} copied to clipboard")
+                return ",".join(to_string(e) for e in self.get_row_at(self.cursor_row))
 
-        value = get_value()
-        pyperclip.copy(str(value))
+        pyperclip.copy(get_value())
 
     def action_table_mode(self):
         table = self.screen.query_one(DataTable)
         current_cursor = next(cursors)
         table.cursor_type = current_cursor
-        self.prompt_text(f"Cursor mode: {current_cursor}")
+        self.prompt_placeholder(f"Cursor mode: {current_cursor}")
 
     def action_password_visibility(self):
         value = self.get_cell_at(self.cursor_coordinate)
         if isinstance(value, Password):
             value.toggle()
-
-    # def on_data_table_cell_selected(self, cell: DataTable.CellSelected):
-    #    if isinstance(cell.value, Password):
-    #        cell.value.toggle()
-    #        self.update_cell_at(self.cursor_coordinate, value=cell.value, update_width=True)
+            self.update_cell_at(self.cursor_coordinate, value, update_width=True)
 
     def on_data_table_cell_highlighted(self, highlighted: DataTable.CellHighlighted):
         help = f'Press {bindings["copy"]} to copy highlighted value to clipboard'
-        if highlighted.coordinate.column == VaultEntry.FIELDS.index("password"):
+        if highlighted.coordinate.column == self.column_names.index("Password"):
             help += f' or {bindings["password_visibility"]} to show/hide password'
-        self.prompt_text(help)
+        self.prompt_placeholder(help)
 
     def on_data_table_column_selected(self, column_selected: DataTable.ColumnSelected):
         self.remove_column(column_selected.column_key)

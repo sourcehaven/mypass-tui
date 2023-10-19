@@ -3,6 +3,7 @@ from typing import Any
 
 from .folder import Folder
 from ..model.password import Password
+from ..utils.string import to_string
 
 
 class VaultEntry:
@@ -77,8 +78,7 @@ class VaultEntry:
             for field, value in zip(VaultEntry.FIELDS, self.values)
         }
         if password_to_string:
-            pwd: Password = dct['password']
-            dct['password'] = pwd.data
+            dct['password'] = to_string(dct['password'])
 
         if filter_empty:
             dct = {key: val for key, val in dct.items() if val}

@@ -4,6 +4,7 @@ from textual.dom import DOMNode
 from textual.widget import Widget
 from textual.widgets import Label, Input, Static, TextArea, Switch
 
+
 REQUIRED_TEXT = " [red]*[/red]"
 
 
@@ -46,6 +47,10 @@ class LabeledInput(Static):
 
     @property
     def value(self):
+        import src.ui.widgets.password as wpw
+        if isinstance(self.input, wpw.Password):
+            import src.model.password as mpw
+            return mpw.Password(self.input.value, hide=self.input.password)
         if isinstance(self.input, Input):
             return self.input.value
         if isinstance(self.input, TextArea):

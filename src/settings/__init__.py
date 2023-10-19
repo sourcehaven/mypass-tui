@@ -22,9 +22,10 @@ bindings = PerDict(
     previous_tab="left",
     next_tab="right",
     password_visibility="ctrl+p",
+    key_bindings="ctrl+b",
     table_mode="z",
     settings="ctrl+s",
-    theme="ctrl+t",   # dark, light, auto
+    theme="ctrl+t",
 )
 
 settings = PerDict(
