@@ -24,10 +24,12 @@ bindings = PerDict(
     password_visibility="ctrl+p",
     table_mode="z",
     settings="ctrl+s",
+    theme="ctrl+t",   # dark, light, auto
 )
 
 settings = PerDict(
     SETTINGS_PATH,
     password_mask="•",
     confirm_quit=True,
+    placeholders=True,
 )

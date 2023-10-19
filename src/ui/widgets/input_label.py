@@ -2,7 +2,7 @@ from textual.app import ComposeResult
 from textual.containers import Container
 from textual.dom import DOMNode
 from textual.widget import Widget
-from textual.widgets import Label, Input, Static, TextArea
+from textual.widgets import Label, Input, Static, TextArea, Switch
 
 REQUIRED_TEXT = " [red]*[/red]"
 
@@ -50,6 +50,8 @@ class LabeledInput(Static):
             return self.input.value
         if isinstance(self.input, TextArea):
             return self.input.text
+        if isinstance(self.input, Switch):
+            return self.input.value
 
         raise ValueError('Must be an instance of Input or TextArea')
 
@@ -63,14 +65,6 @@ def get_invalid_fields(node: DOMNode):
         labeled_input.label.text.replace(REQUIRED_TEXT, "").strip()
         for labeled_input in labeled_inputs if not labeled_input.is_valid
     ]
-
-
-def get_field_value_pairs(node: DOMNode):
-    labeled_inputs = node.query(LabeledInput)
-    return {
-        labeled_input.input.name: labeled_input.value
-        for labeled_input in labeled_inputs
-    }
 
 
 def format_field_text(text: str, length: int, required=False):

@@ -1,10 +1,14 @@
-from typing import ClassVar
+from typing import ClassVar, Iterable, Literal
 
 import pyperclip
+from rich.highlighter import Highlighter
 from textual.binding import BindingType, Binding
+from textual.suggester import Suggester
+from textual.validation import Validator
 from textual.widgets import Input
 
 from src.settings import bindings
+from src.utils.placeholder import placeholder_selector
 
 
 class EpicInput(Input):
@@ -49,6 +53,35 @@ class EpicInput(Input):
         border: tall $error 80%;
     }
     """
+
+    def __init__(
+        self,
+        value: str | None = None,
+        placeholder: str = "",
+        highlighter: Highlighter | None = None,
+        password: bool = False,
+        *,
+        suggester: Suggester | None = None,
+        validators: Validator | Iterable[Validator] | None = None,
+        validate_on: Iterable[Literal["blur", "changed", "submitted"]] | None = None,
+        name: str | None = None,
+        id: str | None = None,
+        classes: str | None = None,
+        disabled: bool = False,
+    ):
+        super().__init__(
+            value=value,
+            placeholder=placeholder_selector(placeholder),
+            highlighter=highlighter,
+            password=password,
+            suggester=suggester,
+            validators=validators,
+            validate_on=validate_on,
+            name=name,
+            id=id,
+            classes=classes,
+            disabled=disabled,
+        )
 
     def action_cut(self):
         pyperclip.copy(self.value)

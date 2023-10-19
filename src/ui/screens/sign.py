@@ -4,12 +4,12 @@ from textual.containers import ScrollableContainer
 from textual.screen import Screen
 from textual.widgets import Button, Label, TabbedContent, TabPane, Footer
 
-from ..util.scrape import clear_inputs
+from ..util.scrape import clear_inputs, scrape_inputs
 from ..util.session import exit_app
 from ..widgets.epic_input import EpicInput
 from ..widgets.feedback import Feedback, show_feedback_on_error
 from ..widgets.buttons import ButtonPair
-from ..widgets.input_label import InputLabel, LabeledInput, get_field_value_pairs, get_invalid_fields
+from ..widgets.input_label import InputLabel, LabeledInput, get_invalid_fields
 from ..widgets.password import Password, PasswordStrength
 
 from ... import session
@@ -33,12 +33,13 @@ class SignScreen(Screen):
                 yield ScrollableContainer(
                     LabeledInput(
                         InputLabel("Username", required=True),
-                        EpicInput(id="signin_username", name="username", classes="labeled_input"),
+                        EpicInput(id="username", placeholder="signin_username", classes="labeled_input"),
                     ),
                     LabeledInput(
                         InputLabel("Password", required=True),
-                        Password(id="signin_password", name="password", classes="labeled_input"),
+                        Password(id="password", placeholder="signin_password", classes="labeled_input"),
                     ),
+                    id="signin_input_container"
                 )
                 yield ButtonPair(
                     left_text="Sign In",
@@ -53,25 +54,26 @@ class SignScreen(Screen):
                 yield ScrollableContainer(
                     LabeledInput(
                         InputLabel("Username", required=True),
-                        EpicInput(id="signup_username", name="username", classes="labeled_input"),
+                        EpicInput(id="username", placeholder="signup_username", classes="labeled_input"),
                     ),
                     LabeledInput(
                         InputLabel("Password", required=True),
-                        Password(id="signup_password", name="password", classes="labeled_input", strength_bar=signup_pw_strength),
+                        Password(id="password", placeholder="signup_password", classes="labeled_input", strength_bar=signup_pw_strength),
                     ),
                     signup_pw_strength,
                     LabeledInput(
                         InputLabel("First name"),
-                        EpicInput(id="signup_firstname", name="firstname", classes="labeled_input"),
+                        EpicInput(id="firstname", placeholder="signup_firstname", classes="labeled_input"),
                     ),
                     LabeledInput(
                         InputLabel("Last name"),
-                        EpicInput(id="signup_lastname", name="lastname", classes="labeled_input"),
+                        EpicInput(id="lastname", placeholder="signup_lastname", classes="labeled_input"),
                     ),
                     LabeledInput(
                         InputLabel("Email"),
-                        EpicInput(id="signup_email", name="email", classes="labeled_input"),
+                        EpicInput(id="email", placeholder="signup_email", classes="labeled_input"),
                     ),
+                    id="signup_input_container"
                 )
                 yield ButtonPair(
                     left_text="Sign Up",
@@ -82,11 +84,6 @@ class SignScreen(Screen):
                 yield Feedback(id="signup_feedback")
         yield Footer()
 
-    def get_active_tab(self):
-        for obj in self.query(f"#{self.query_one(TabbedContent).active}"):
-            if isinstance(obj, TabPane):
-                return obj
-
     def action_signin_tab(self):
         self.query_one(TabbedContent).active = "signin_tab"
 
@@ -95,13 +92,16 @@ class SignScreen(Screen):
 
     @show_feedback_on_error(ApiException, ValidatorException, selector="#signin_feedback")
     def on_signin_pressed(self, _: Button.Pressed):
-        tab = self.get_active_tab()
+        tab = self.screen.query_one("#signin_input_container")
 
         invalid_fields = get_invalid_fields(tab)
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:
-            inputs = get_field_value_pairs(tab)
+            inputs = {
+                key: val
+                for key, val in scrape_inputs(tab).items()
+            }
             session.user = User.login(**inputs)
 
             from .main import MainScreen
@@ -109,13 +109,17 @@ class SignScreen(Screen):
 
     @show_feedback_on_error(ApiException, ValidatorException, selector="#signup_feedback")
     def on_signup_pressed(self, _: Button.Pressed):
-        tab = self.get_active_tab()
+        tab = self.screen.query_one("#signup_input_container")
 
         invalid_fields = get_invalid_fields(tab)
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:
-            inputs = get_field_value_pairs(tab)
+            inputs = {
+                key: val
+                for key, val in scrape_inputs(tab).items()
+            }
+            clear_inputs(tab)
             session.user, token = User.registration(**inputs)
 
             from .token import TokenScreen

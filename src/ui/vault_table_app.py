@@ -1,10 +1,5 @@
-import threading
-from typing import Callable
-
-import darkdetect
-from textual.app import App
+from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.reactive import Reactive
 from textual.screen import ModalScreen, ScreenResultCallbackType, Screen, ScreenResultType
 from textual.widget import AwaitMount
 
@@ -15,6 +10,9 @@ from .screens import PasswordDialog
 from .screens.input import InputScreen
 from .screens.sign import SignScreen
 from .util.session import exit_app
+from .widgets import VaultTable
+from ..model.password import Password
+from ..model.vault_entry import VaultEntry
 from ..settings import bindings, settings
 
 
@@ -22,15 +20,12 @@ class MyPassApp(App):
     CSS_PATH = "mypass.css"
     TITLE = "MyPass"
 
-    dark: Reactive[bool] = Reactive(darkdetect.isDark(), compute=False)
-
     App.BINDINGS = [
         Binding(bindings["quit"], "quit", "Quit", priority=True),
         Binding(bindings["key_bindings"], "key_bindings", "Key bindings", priority=True),
         Binding(bindings["settings"], "settings", "Settings", priority=True),
         Binding(bindings["help"], HELP_PAGE_ID, HELP_PAGE_TITLE),
         Binding(bindings["about"], ABOUT_PAGE_ID, ABOUT_PAGE_TITLE),
-        Binding(bindings["theme"], "toggle_dark", "Theme", show=True),
         Binding("left", "previous_tab", show=False),
         Binding("right", "next_tab", show=False),
     ]
@@ -52,17 +47,8 @@ class MyPassApp(App):
         if not isinstance(self.screen, ModalScreen):
             return super().push_screen(screen=screen, callback=callback)
 
-    def theme_listener(self):
-        def listener(theme: str) -> None:
-            self.app.dark = False if theme == 'Light' else True
-
-        t = threading.Thread(target=darkdetect.listener, args=(listener,))
-        t.daemon = True
-        t.start()
-
-    def on_mount(self):
-        self.theme_listener()
-        self.push_screen(SignScreen())
+    def compose(self) -> ComposeResult:
+        yield VaultTable([VaultEntry(id=5, username="User1", password=Password("Passwd"))])
 
     def action_quit(self) -> None:
         exit_app(self.app)

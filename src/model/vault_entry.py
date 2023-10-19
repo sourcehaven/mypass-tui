@@ -6,6 +6,9 @@ from ..model.password import Password
 
 
 class VaultEntry:
+    FIELDS = "username", "password", "title", "website", "folder", "notes", "tags"
+    REQUIRED = True, True, False, False, False, False, False
+
     __slots__ = (
         "id",
         "username",
@@ -68,15 +71,18 @@ class VaultEntry:
 
         return cls(**data, password=password, created_at=created_at, deleted_at=deleted_at)
 
-    def to_dict(self) -> dict:
-        ret = {
+    def to_dict(self, password_to_string=True, filter_empty=True) -> dict:
+        dct = {
             field: value
-            for field, value in zip(self.fields(), self.values)
-            if value not in {None, ""}
+            for field, value in zip(VaultEntry.FIELDS, self.values)
         }
-        pw: Password = ret["password"]
-        ret["password"] = pw.data
-        return ret
+        if password_to_string:
+            pwd: Password = dct['password']
+            dct['password'] = pwd.data
+
+        if filter_empty:
+            dct = {key: val for key, val in dct.items() if val}
+        return dct
 
     @property
     def values(self):
@@ -93,10 +99,6 @@ class VaultEntry:
             self.notes or "",
             ", ".join(self.tags)
         )
-
-    @classmethod
-    def fields(cls):
-        return "username", "password", "title", "website", "folder", "notes", "tags"
 
     def __str__(self):
         return (

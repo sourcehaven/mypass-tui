@@ -134,6 +134,15 @@ Switch {
     width: 1fr;
 }
 
+.no_content {
+    width: 1fr;
+    height: 1fr;
+    align: center middle;
+    content-align: center middle;
+    text-style: bold;
+    text-opacity: 75%;
+}
+
 #show_hide_btn {
     min-width: 8;
     width: 20%;

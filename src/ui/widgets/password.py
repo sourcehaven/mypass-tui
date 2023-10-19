@@ -1,6 +1,5 @@
 from typing import Iterable, Callable
 
-from rich.text import Text
 from textual.binding import Binding
 from textual.suggester import Suggester
 from textual.validation import Validator
@@ -95,7 +94,6 @@ class Password(EpicInput):
         self,
         value: str | None = None,
         placeholder: str = "",
-        password_mask: str | Callable[[str], str] = "",
         strength_bar: PasswordStrength = None,
         *,
         suggester: Suggester | None = None,
@@ -116,7 +114,7 @@ class Password(EpicInput):
             classes=classes,
             disabled=disabled,
         )
-        self.password_mask = password_mask if password_mask else settings["password_mask"]
+        self.password_mask = settings["password_mask"]
         self.strength_bar = strength_bar
         self.set_hint(show=True)
 

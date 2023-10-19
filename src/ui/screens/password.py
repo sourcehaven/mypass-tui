@@ -3,7 +3,6 @@ from textual.widgets import Button, Input
 
 from .secondary import DialogScreen
 from ..widgets import Password, InputLabel, LabeledInput
-from ...settings import settings
 
 
 class PasswordDialog(DialogScreen):
@@ -21,7 +20,7 @@ class PasswordDialog(DialogScreen):
     def _compose(self) -> ComposeResult:
         yield LabeledInput(
             InputLabel(self.password_label, required=True),
-            Password(id="password", password_mask=settings["password_mask"]),
+            Password(id="password"),
         )
 
     def on_submit_pressed(self, _: Button.Pressed) -> None:

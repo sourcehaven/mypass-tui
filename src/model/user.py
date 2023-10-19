@@ -117,8 +117,8 @@ class User:
         else:
             raise Exception(resp.json())
 
-    def vault_update(self, crit: dict[str, str], fields: dict[str, str]) -> dict[str, Any]:
-        resp = requests.post(url=join_vault_url("update"), json={"crit": crit, "fields": fields}, auth=self.auth())
+    def vault_update(self, id, fields: dict[str, str]) -> dict[str, Any]:
+        resp = requests.post(url=join_vault_url("update"), json={"id": id, "fields": fields}, auth=self.auth())
 
         if resp.status_code == 200:
             return resp.json()
