@@ -1,4 +1,5 @@
-from typing import Any
+from collections import UserString
+from typing import Any, Final
 
 import requests
 
@@ -6,7 +7,13 @@ from .vault_entry import VaultEntry
 from .auth import BearerAuth
 from .shared import join_auth_url, join_vault_url
 from ..exception.api import ApiException
-from ..utils.string import replace_empty_string_with_none
+from ..utils.string import replace_empty_string_with_none, to_string
+
+USERNAME: Final = "username"
+PASSWORD: Final = "password"
+EMAIL: Final = "email"
+FIRSTNAME: Final = "firstname"
+LASTNAME: Final = "lastname"
 
 
 class User:
@@ -27,7 +34,7 @@ class User:
     @classmethod
     def login(cls, username: str, password: str):
         session = requests.Session()
-        resp = session.post(url=join_auth_url("login"), json={"username": username, "password": password})
+        resp = session.post(url=join_auth_url("login"), json={USERNAME: username, PASSWORD: password})
         if resp.status_code == 201:
             data = resp.json()
             return cls(**data, session=session)
@@ -47,11 +54,11 @@ class User:
         resp = session.post(
             url=join_auth_url("registration"),
             json={
-                "username": username,
-                "password": password,
-                "email": replace_empty_string_with_none(email),
-                "firstname": replace_empty_string_with_none(firstname),
-                "lastname": replace_empty_string_with_none(lastname),
+                USERNAME: username,
+                PASSWORD: password,
+                EMAIL: replace_empty_string_with_none(email),
+                FIRSTNAME: replace_empty_string_with_none(firstname),
+                LASTNAME: replace_empty_string_with_none(lastname),
             },
         )
         if resp.status_code == 201:
@@ -81,19 +88,19 @@ class User:
 
     @property
     def username(self):
-        return self._session.cookies.get("username")
+        return self._session.cookies.get(USERNAME)
 
     @property
     def firstname(self):
-        return self._session.cookies.get("firstname")
+        return self._session.cookies.get(FIRSTNAME)
 
     @property
     def lastname(self):
-        return self._session.cookies.get("lastname")
+        return self._session.cookies.get(LASTNAME)
 
     @property
     def email(self):
-        return self._session.cookies.get("email")
+        return self._session.cookies.get(EMAIL)
 
     def vault_add(self, entry: VaultEntry):
         resp = requests.post(url=join_vault_url("add"), json={"fields": entry.to_dict()}, auth=self.auth())
@@ -117,7 +124,12 @@ class User:
         else:
             raise Exception(resp.json())
 
-    def vault_update(self, id, fields: dict[str, str]) -> dict[str, Any]:
+    def vault_update(self, id, fields: dict[str, str | UserString]) -> dict[str, Any]:
+        fields = {field: to_string(value) for field, value in fields.items()}
+
+        # TODO: This should be removed after tags are supported
+        fields.pop('tags')
+
         resp = requests.post(url=join_vault_url("update"), json={"id": id, "fields": fields}, auth=self.auth())
 
         if resp.status_code == 200:

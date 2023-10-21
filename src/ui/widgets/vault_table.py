@@ -98,8 +98,6 @@ class VaultTable(DataTable):
                 update_width=True,
             )
 
-        fields = {field: to_string(value) for field, value in fields.items()}
-
         session.user.vault_update(id=id, fields=fields)
 
     def on_data_table_cell_selected(self, selected_cell: DataTable.CellSelected):
@@ -119,7 +117,8 @@ class VaultTable(DataTable):
         values = self.get_row_at(selected_row.cursor_row)
         inputs = [
             InputInfo(name=col, value=val, required=req)
-            for col, val, req in zip(self.column_names, values, VaultEntry.REQUIRED)
+            for col, val, req
+            in zip(self.column_names, values, VaultEntry.REQUIRED)
         ]
         self.app.push_screen(
             InputScreen(title="Edit", inputs=inputs),

@@ -1,29 +1,43 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, Final
 
-from .folder import Folder
+from .input_info import InputInfo
 from ..model.password import Password
-from ..utils.string import to_string
+from ..utils.string import to_string, split_path
+
+ID: Final = "id"
+PARENT_ID: Final = "parent_id"
+USERNAME: Final = "username"
+PASSWORD: Final = "password"
+TITLE: Final = "title"
+WEBSITE: Final = "website"
+FOLDER: Final = "folder"
+NOTES: Final = "notes"
+TAGS: Final = "tags"
+ACTIVE: Final = "active"
+DELETED: Final = "deleted"
+CREATED_AT: Final = "created_at"
+DELETED_AT: Final = "deleted_at"
 
 
 class VaultEntry:
-    FIELDS = "username", "password", "title", "website", "folder", "notes", "tags"
+    FIELDS = USERNAME, PASSWORD, TITLE, WEBSITE, FOLDER, NOTES, TAGS
     REQUIRED = True, True, False, False, False, False, False
 
     __slots__ = (
-        "id",
-        "username",
-        "password",
-        "title",
-        "website",
-        "folder",
-        "notes",
-        "tags",
-        "parent_id",
-        "active",
-        "deleted",
-        "created_at",
-        "deleted_at",
+        ID,
+        USERNAME,
+        PASSWORD,
+        TITLE,
+        WEBSITE,
+        FOLDER,
+        NOTES,
+        TAGS,
+        PARENT_ID,
+        ACTIVE,
+        DELETED,
+        CREATED_AT,
+        DELETED_AT,
     )
 
     def __init__(
@@ -36,7 +50,7 @@ class VaultEntry:
         deleted_at: datetime = None,
         title: str = None,
         website: str = None,
-        folder: Folder = None,
+        folder: str = None,
         notes: str = None,
         parent_id: int = None,
         active: bool = True,
@@ -56,17 +70,32 @@ class VaultEntry:
         self.active = active
         self.deleted = deleted
 
+    def update(self, dct: dict[str, Any]):
+        self.username = dct.get(USERNAME, self.username)
+        self.password = dct.get(PASSWORD, self.password)
+        self.title = dct.get(TITLE, self.title)
+        self.folder = dct.get(FOLDER, self.folder)
+        self.notes = dct.get(NOTES, self.notes)
+        self.tags = dct.get(TAGS, self.tags)
+
+    def info(self):
+        return [
+            InputInfo(field, val, req)
+            for field, val, req
+            in zip(VaultEntry.FIELDS, self.values, VaultEntry.REQUIRED)
+        ]
+
     @classmethod
     def from_dict(cls, data: dict[str, Any], date_format="%Y-%m-%dT%H:%M:%S", hide_password=True):
-        created_at = data.pop("created_at", None)
+        created_at = data.pop(CREATED_AT, None)
         if created_at and isinstance(created_at, str):
             created_at = datetime.strptime(created_at, date_format)
 
-        deleted_at = data.pop("deleted_at", None)
+        deleted_at = data.pop(DELETED_AT, None)
         if deleted_at and isinstance(deleted_at, str):
             deleted_at = datetime.strptime(deleted_at, date_format)
 
-        password = data.pop("password", None)
+        password = data.pop(PASSWORD, None)
         if password and isinstance(password, str):
             password = Password(password, hide_password)
 
@@ -78,7 +107,7 @@ class VaultEntry:
             for field, value in zip(VaultEntry.FIELDS, self.values)
         }
         if password_to_string:
-            dct['password'] = to_string(dct['password'])
+            dct[PASSWORD] = to_string(dct[PASSWORD])
 
         if filter_empty:
             dct = {key: val for key, val in dct.items() if val}
@@ -103,11 +132,40 @@ class VaultEntry:
     def __str__(self):
         return (
             f"{self.__class__.__name__}("
-            f"id={self.id}, "
-            f"username={self.username}, "
-            f"title={self.title}, "
-            f"website={self.website}, "
-            f"folder={self.folder}, "
-            f"notes={self.notes}, "
-            f"tags={self.tags})"
+            f"{ID}={self.id}, "
+            f"{USERNAME}={self.username}, "
+            f"{TITLE}={self.title}, "
+            f"{WEBSITE}={self.website}, "
+            f"{FOLDER}={self.folder}, "
+            f"{NOTES}={self.notes}, "
+            f"{TAGS}={self.tags})"
         )
+
+
+def append_tree(root_node: list, entry: VaultEntry):
+    i = 0
+    split_folder = split_path(entry.folder)
+    depth = len(split_folder)
+
+    def build_tree(node: list):
+        nonlocal i
+
+        for e in node:
+            if isinstance(e, tuple) and e[0] == split_folder[i]:
+                next_node = e[1]
+                break
+        else:
+            next_node = []
+            node.append((split_folder[i], next_node))
+
+        i += 1
+        if i == depth:
+            next_node.append(entry)
+
+        while i < depth:
+            build_tree(next_node)
+
+    if depth == 0:
+        root_node.append(entry)
+    else:
+        build_tree(root_node)
