@@ -2,7 +2,6 @@ from textual.widgets import Static
 
 
 class Gap(Static):
-
     DEFAULT_CSS = """
     Gap {
         height: 1; 

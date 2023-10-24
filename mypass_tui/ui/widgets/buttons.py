@@ -1,8 +1,8 @@
-from typing import Callable, Union, Awaitable
+from typing import Awaitable, Callable, Union
 
 from textual import on
 from textual.app import ComposeResult
-from textual.widgets import Static, Button
+from textual.widgets import Button, Static
 
 from mypass_tui.utils.asynchronous import await_me_maybe
 
@@ -33,7 +33,6 @@ class ButtonPair(Static):
         self,
         left_callback: Callable[[Button.Pressed], Union[None, Awaitable[None]]],
         right_callback: Callable[[Button.Pressed], Union[None, Awaitable[None]]],
-        left_disabled=False,
         left_text: str = "Submit",
         right_text: str = "Cancel",
     ):
@@ -41,13 +40,11 @@ class ButtonPair(Static):
         self.left_callback = left_callback
         self.right_callback = right_callback
 
-        self.left_disabled = left_disabled
-
         self.left_text = left_text
         self.right_text = right_text
 
     def compose(self) -> ComposeResult:
-        yield Button(self.left_text, disabled=self.left_disabled, variant="primary", id="left_button")
+        yield Button(self.left_text, variant="primary", id="left_button")
         yield Button(self.right_text, variant="error", id="right_button")
 
     @on(Button.Pressed, "#left_button")

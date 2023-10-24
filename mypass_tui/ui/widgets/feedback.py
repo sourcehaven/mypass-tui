@@ -25,14 +25,10 @@ class Feedback(Static):
     def set_style(self, style: FeedbackStyle):
         def set_feedback_class(class_name):
             self.remove_class(
-                "neutral_feedback",
-                "info_feedback",
-                "error_feedback",
-                "warning_feedback",
-                "success_feedback"
+                "neutral_feedback", "info_feedback", "error_feedback", "warning_feedback", "success_feedback"
             )
             self.add_class(class_name)
-            self.border_title = class_name.split('_')[0].capitalize()
+            self.border_title = class_name.split("_")[0].capitalize()
 
         match style:
             case FeedbackStyle.NEUTRAL:
@@ -48,14 +44,14 @@ class Feedback(Static):
 
     @classmethod
     def _show(
-            cls,
-            node: DOMNode,
-            text: str,
-            style: FeedbackStyle,
-            selector: str | Type[QueryType] = None,
-            offset=(0.0, -3.0),
-            display_seconds: int = DEFAULT_DISPLAY_SECONDS,
-            animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
+        cls,
+        node: DOMNode,
+        text: str,
+        style: FeedbackStyle,
+        selector: str | Type[QueryType] = None,
+        offset=(0.0, -3.0),
+        display_seconds: int = DEFAULT_DISPLAY_SECONDS,
+        animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
     ):
         if selector is None:
             selector = cls
@@ -74,7 +70,9 @@ class Feedback(Static):
             def hide_display():
                 obj.display = False
 
-            obj.styles.animate("opacity", value=0.0, duration=animation_seconds, delay=display_seconds, on_complete=hide_display)
+            obj.styles.animate(
+                "opacity", value=0.0, duration=animation_seconds, delay=display_seconds, on_complete=hide_display
+            )
 
         obj.display = True
         obj.styles.animate("opacity", value=1.0, duration=animation_seconds, on_complete=hide_on_complete)
@@ -121,13 +119,13 @@ class Feedback(Static):
 
     @classmethod
     def warning(
-            cls,
-            node: DOMNode,
-            text: str,
-            selector: str | Type[QueryType] = None,
-            offset=(0.0, -3.0),
-            display_seconds: int = DEFAULT_DISPLAY_SECONDS,
-            animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
+        cls,
+        node: DOMNode,
+        text: str,
+        selector: str | Type[QueryType] = None,
+        offset=(0.0, -3.0),
+        display_seconds: int = DEFAULT_DISPLAY_SECONDS,
+        animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
     ):
         Feedback._show(
             node=node,
@@ -141,13 +139,13 @@ class Feedback(Static):
 
     @classmethod
     def neutral(
-            cls,
-            node: DOMNode,
-            text: str,
-            selector: str | Type[QueryType] = None,
-            offset=(0.0, -3.0),
-            display_seconds: int = DEFAULT_DISPLAY_SECONDS,
-            animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
+        cls,
+        node: DOMNode,
+        text: str,
+        selector: str | Type[QueryType] = None,
+        offset=(0.0, -3.0),
+        display_seconds: int = DEFAULT_DISPLAY_SECONDS,
+        animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
     ):
         Feedback._show(
             node=node,
@@ -161,13 +159,13 @@ class Feedback(Static):
 
     @classmethod
     def success(
-            cls,
-            node: DOMNode,
-            text: str,
-            selector: str | Type[QueryType] = None,
-            offset=(0.0, -3.0),
-            display_seconds: int = DEFAULT_DISPLAY_SECONDS,
-            animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
+        cls,
+        node: DOMNode,
+        text: str,
+        selector: str | Type[QueryType] = None,
+        offset=(0.0, -3.0),
+        display_seconds: int = DEFAULT_DISPLAY_SECONDS,
+        animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
     ):
         Feedback._show(
             node=node,
@@ -181,10 +179,10 @@ class Feedback(Static):
 
 
 def show_feedback_on_error(
-        *exc: Type[Exception],
-        selector: str | Type[QueryType] = None,
-        display_seconds: int = Feedback.DEFAULT_DISPLAY_SECONDS,
-        animation_seconds: int = Feedback.DEFAULT_ANIMATION_SECONDS,
+    *exc: Type[Exception],
+    selector: str | Type[QueryType] = None,
+    display_seconds: int = Feedback.DEFAULT_DISPLAY_SECONDS,
+    animation_seconds: int = Feedback.DEFAULT_ANIMATION_SECONDS,
 ):
     def decorator(func):
         def wrapper(self, *args, **kwargs):

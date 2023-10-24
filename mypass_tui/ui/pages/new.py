@@ -4,20 +4,19 @@ from textual.containers import ScrollableContainer
 from textual.widgets import Button, Label, Static
 
 from mypass_tui import session
-from mypass_tui.exception.validator import RequiredException, ValidatorException
+from mypass_tui.exception.validator import (RequiredException,
+                                            ValidatorException)
 from mypass_tui.localization import i18n
 from mypass_tui.model.vault_entry import VaultEntry
-
 from mypass_tui.ui.util.scrape import clear_inputs, scrape_inputs
-from mypass_tui.ui.widgets.epic_input import EpicInput
-from mypass_tui.ui.widgets.gap import Gap
-from mypass_tui.ui.widgets.vault_table import VaultTable
-from mypass_tui.ui.widgets.feedback import Feedback
 from mypass_tui.ui.widgets.dynamic_text_area import DynamicTextArea
-from mypass_tui.ui.widgets.feedback import show_feedback_on_error
-from mypass_tui.ui.widgets.input_label import InputLabel, LabeledInput, get_invalid_fields
+from mypass_tui.ui.widgets.epic_input import EpicInput
+from mypass_tui.ui.widgets.feedback import Feedback, show_feedback_on_error
+from mypass_tui.ui.widgets.gap import Gap
+from mypass_tui.ui.widgets.input_label import (InputLabel, LabeledInput,
+                                               get_invalid_fields)
 from mypass_tui.ui.widgets.password import Password
-
+from mypass_tui.ui.widgets.vault_table import VaultTable
 
 NEW_PAGE_ID = "new_page"
 
@@ -27,7 +26,6 @@ HIDE = "Hide"
 
 
 class NewEntryPage(Static):
-
     def compose(self) -> ComposeResult:
         yield Label("Add new vault entry", classes="title")
         with ScrollableContainer(classes="container"):

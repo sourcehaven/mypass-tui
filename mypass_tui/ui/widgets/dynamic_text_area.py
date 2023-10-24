@@ -3,7 +3,6 @@ from textual.widgets import TextArea
 
 
 class DynamicTextArea(TextArea):
-
     DEFAULT_CSS = """
     DynamicTextArea {   
         width: 1fr;
@@ -16,9 +15,9 @@ class DynamicTextArea(TextArea):
 
     def on_key(self, key: Key):
         line_count = self.document.line_count
-        if key.name == 'enter':
+        if key.name == "enter":
             self.styles.height = line_count + 1
-        elif key.name == 'backspace':
+        elif key.name == "backspace":
             x, y = self.cursor_location
             if x == 0:
                 return

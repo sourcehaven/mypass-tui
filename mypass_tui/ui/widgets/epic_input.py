@@ -2,18 +2,16 @@ from typing import ClassVar, Iterable, Literal
 
 import pyperclip
 from rich.highlighter import Highlighter
-from textual.binding import BindingType, Binding
+from textual.binding import Binding, BindingType
 from textual.suggester import Suggester
 from textual.validation import Validator
 from textual.widgets import Input
 
-from mypass_tui.localization import i18n
 from mypass_tui.settings import bindings
 from mypass_tui.ui.widgets import Feedback
 
 
 class EpicInput(Input):
-
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding(bindings["cut"], "cut", show=False),
         Binding(bindings["copy"], "copy", show=False),
@@ -69,7 +67,6 @@ class EpicInput(Input):
         id: str | None = None,
         classes: str | None = None,
         disabled: bool = False,
-        editable: bool = True,
     ):
         super().__init__(
             value=value,
@@ -84,12 +81,10 @@ class EpicInput(Input):
             classes=classes,
             disabled=disabled,
         )
-        self.editable = editable
 
     def action_cut(self):
-        if self.editable:
-            pyperclip.copy(self.value)
-            self.value = ""
+        pyperclip.copy(self.value)
+        self.value = ""
 
         Feedback.info(self.screen, f"{self.id.title()} cut to clipboard")
 
@@ -98,51 +93,5 @@ class EpicInput(Input):
         Feedback.info(self.screen, f"{self.id.title()} copied to clipboard")
 
     def action_paste(self):
-        if self.editable:
-            self.value = pyperclip.paste()
-            self.cursor_position = len(self.value)
-
-    def show_no_edit_feedback(self):
-        Feedback.info(self.screen, i18n.feedback__info__display_mode)
-
-    def insert_text_at_cursor(self, text: str) -> None:
-        if self.editable:
-            super().insert_text_at_cursor(text)
-        else:
-            self.show_no_edit_feedback()
-
-    def action_delete_left(self) -> None:
-        if self.editable:
-            super().action_delete_left()
-        else:
-            self.show_no_edit_feedback()
-    
-    def action_delete_right(self) -> None:
-        if self.editable:
-            super().action_delete_right()
-        else:
-            self.show_no_edit_feedback()
-    
-    def action_delete_left_word(self) -> None:
-        if self.editable:
-            super().action_delete_left_word()
-        else:
-            self.show_no_edit_feedback()
-
-    def action_delete_right_word(self) -> None:
-        if self.editable:
-            super().action_delete_right_word()
-        else:
-            self.show_no_edit_feedback()
-    
-    def action_delete_left_all(self) -> None:
-        if self.editable:
-            super().action_delete_left_all()
-        else:
-            self.show_no_edit_feedback()
-            
-    def action_delete_right_all(self) -> None:
-        if self.editable:
-            super().action_delete_right_all()
-        else:
-            self.show_no_edit_feedback()
+        self.value = pyperclip.paste()
+        self.cursor_position = len(self.value)

@@ -44,8 +44,8 @@ title:
   table: Tábla nézet
   folder: Mappa nézet
   tile: Csempe nézet
-  display: Megjelenító mód
-  edit: Szerkesztő mód
+  display: Megjelenítő nézet
+  edit: Szerkesztő nézet
   settings: Beállítások
   exit: Alkalmazás bezárása
 
@@ -86,7 +86,7 @@ feedback:
   success:
     new_entry: Széf bejegyzés sikeresen létrehozva!
   info:
-    display_mode: A mező nem szerkesztető "Megjelenítő" nézetben. Nyomja meg a {} billentyűt, sdhogy "Szerkesztő" nézetbe váltson.
+    display_mode: A mező nem szerkesztető "Megjelenítő" nézetben. Nyomja meg a {} billentyűt, hogy "Szerkesztő" nézetbe váltson.
 
 subtitle:
   show_hide_password: Nyomja meg a {} billentyűt a jelsző {megjelenítéséhez/elrejtéséhez}

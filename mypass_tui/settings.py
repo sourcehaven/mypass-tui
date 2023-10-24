@@ -2,7 +2,6 @@ from perdict import PerDict
 
 from mypass_tui.paths import KEY_BINDINGS_PATH, SETTINGS_PATH
 
-
 bindings = PerDict(
     KEY_BINDINGS_PATH,
     sign_in="1",

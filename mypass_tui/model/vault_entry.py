@@ -4,7 +4,7 @@ from typing import Any, Final
 from mypass_tui.localization import i18n
 from mypass_tui.model.input_info import InputInfo
 from mypass_tui.model.password import Password
-from mypass_tui.utils.string import to_string, split_path
+from mypass_tui.utils.string import split_path, to_string
 
 ID: Final = "id"
 PARENT_ID: Final = "parent_id"
@@ -22,11 +22,16 @@ DELETED_AT: Final = "deleted_at"
 
 
 class VaultEntry:
-    FIELD_NAMES = (
-        i18n.label__username, i18n.label__password, i18n.label__title,
-        i18n.label__website, i18n.label__folder, i18n.label__notes, i18n.label__tags
+    TRANSLATED_FIELDS = (
+        i18n.label__username,
+        i18n.label__password,
+        i18n.label__title,
+        i18n.label__website,
+        i18n.label__folder,
+        i18n.label__notes,
+        i18n.label__tags,
     )
-    FIELDS = USERNAME, PASSWORD, TITLE, WEBSITE, FOLDER, NOTES, TAGS
+    API_FIELDS = USERNAME, PASSWORD, TITLE, WEBSITE, FOLDER, NOTES, TAGS
     REQUIRED = True, True, False, False, False, False, False
 
     __slots__ = (
@@ -83,11 +88,10 @@ class VaultEntry:
         self.notes = dct.get(NOTES, self.notes)
         self.tags = dct.get(TAGS, self.tags)
 
-    def info(self):
+    def input_details(self):
         return [
             InputInfo(field, val, req)
-            for field, val, req
-            in zip(VaultEntry.FIELDS, self.values, VaultEntry.REQUIRED)
+            for field, val, req in zip(VaultEntry.TRANSLATED_FIELDS, self.values, VaultEntry.REQUIRED)
         ]
 
     @classmethod
@@ -107,10 +111,7 @@ class VaultEntry:
         return cls(**data, password=password, created_at=created_at, deleted_at=deleted_at)
 
     def to_dict(self, password_to_string=True, filter_empty=True) -> dict:
-        dct = {
-            field: value
-            for field, value in zip(VaultEntry.FIELDS, self.values)
-        }
+        dct = {field: value for field, value in zip(VaultEntry.API_FIELDS, self.values)}
         if password_to_string:
             dct[PASSWORD] = to_string(dct[PASSWORD])
 
@@ -131,7 +132,7 @@ class VaultEntry:
             self.website or "",
             self.folder or "",
             self.notes or "",
-            ", ".join(self.tags)
+            ", ".join(self.tags),
         )
 
     def __str__(self):

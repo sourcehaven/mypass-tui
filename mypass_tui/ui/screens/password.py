@@ -2,7 +2,7 @@ from textual.app import ComposeResult
 from textual.widgets import Button, Input
 
 from mypass_tui.ui.screens.secondary import DialogScreen
-from mypass_tui.ui.widgets import Password, InputLabel, LabeledInput
+from mypass_tui.ui.widgets import InputLabel, LabeledInput, Password
 
 
 class PasswordDialog(DialogScreen):

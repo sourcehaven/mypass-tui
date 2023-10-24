@@ -41,7 +41,6 @@ class DialogScreen(SecondaryScreen):
     def __init__(
         self,
         title: str,
-        submit_btn_disabled=False,
         submit_btn_text: str = "Submit",
         cancel_btn_text: str = "Cancel",
         name: str | None = None,
@@ -50,7 +49,6 @@ class DialogScreen(SecondaryScreen):
     ):
         super().__init__(name=name, id=id, classes=classes)
         self.title_label = Label(title, classes="title")
-        self.submit_btn_disabled = submit_btn_disabled
         self.submit_btn_text = submit_btn_text
         self.cancel_btn_text = cancel_btn_text
 
@@ -73,7 +71,6 @@ class DialogScreen(SecondaryScreen):
             *self._compose(),
             ButtonPair(
                 left_callback=self.on_submit_pressed,
-                left_disabled=self.submit_btn_disabled,
                 right_callback=self.on_cancel_pressed,
                 left_text=self.submit_btn_text,
                 right_text=self.cancel_btn_text,

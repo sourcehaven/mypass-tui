@@ -5,10 +5,9 @@ from urllib.parse import urljoin
 import requests
 
 from mypass_tui.exception.api import ApiException
-from mypass_tui.utils.string import replace_empty_string_with_none, to_string
-
-from mypass_tui.model.vault_entry import VaultEntry
 from mypass_tui.model.auth import BearerAuth
+from mypass_tui.model.vault_entry import VaultEntry
+from mypass_tui.utils.string import replace_empty_string_with_none, to_string
 
 USERNAME: Final = "username"
 PASSWORD: Final = "password"
@@ -140,7 +139,7 @@ class User:
         fields = {field: to_string(value) for field, value in fields.items()}
 
         # TODO: This should be removed after tags are supported
-        fields.pop('tags')
+        fields.pop("tags")
 
         resp = requests.post(url=self.join_vault_url("update"), json={"id": id, "fields": fields}, auth=self.auth())
 

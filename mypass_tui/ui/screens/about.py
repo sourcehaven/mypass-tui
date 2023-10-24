@@ -1,7 +1,7 @@
 from textual.app import ComposeResult
 
-from .secondary import SecondaryScreen
-from ..pages import AboutPage
+from mypass_tui.ui.pages import AboutPage
+from mypass_tui.ui.secondary import SecondaryScreen
 
 
 class AboutScreen(SecondaryScreen):

@@ -1,6 +1,5 @@
-from textual.screen import Screen
-
 from textual.binding import Binding
+from textual.screen import Screen
 from textual.widgets import Footer, TabbedContent, TabPane
 
 from mypass_tui.localization import i18n

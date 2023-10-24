@@ -1,19 +1,17 @@
-from typing import Iterable, Callable
+from typing import Callable, Iterable
 
-from rich.text import Text
+from textual.app import ComposeResult
 from textual.binding import Binding
+from textual.containers import Horizontal
 from textual.suggester import Suggester
 from textual.validation import Validator
-from textual.widgets import Input
-from textual.app import ComposeResult
-from textual.containers import Horizontal
-from textual.widgets import ProgressBar, Label, Static
-
-from .epic_input import EpicInput
+from textual.widgets import Input, Label, ProgressBar, Static
 
 import mypass_tui.model.password as mpw
 from mypass_tui.settings import bindings, settings
+
 from ...localization import i18n
+from .epic_input import EpicInput
 
 SHOW = "Show"
 HIDE = "Hide"
@@ -57,7 +55,6 @@ class PasswordStrengthLabel(Label):
 
 
 class PasswordStrength(Static):
-
     DEFAULT_CSS = """
     Horizontal {
         height: 1;
@@ -83,20 +80,11 @@ class PasswordStrength(Static):
 
 
 class Password(EpicInput):
-
-    BINDINGS = [
-        Binding(bindings["password_visibility"], "show_hide", show=False)
-    ]
+    BINDINGS = [Binding(bindings["password_visibility"], "show_hide", show=False)]
 
     def _set_hint(self, show=True):
         index = 0 if show else 1
         self.border_subtitle = i18n.subtitle__show_hide_password[index]
-        """
-        self.border_subtitle = (
-            f"Press [bold]{bindings['password_visibility']}[/bold] "
-            f"to [bold][italic]{'show' if show else 'hide'}[/italic][/bold] password"
-        )
-        """
 
     def __init__(
         self,
@@ -123,7 +111,6 @@ class Password(EpicInput):
             id=id,
             classes=classes,
             disabled=disabled,
-            editable=editable,
         )
         self.password_mask = settings["password_mask"]
         self.strength_bar = strength_bar

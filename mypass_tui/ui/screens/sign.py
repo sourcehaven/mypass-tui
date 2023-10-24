@@ -2,26 +2,26 @@ from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import ScrollableContainer
 from textual.screen import Screen
-from textual.widgets import Button, Label, TabbedContent, TabPane, Footer
-
-from mypass_tui.ui.util.scrape import clear_inputs, scrape_inputs
-from mypass_tui.ui.util.session import exit_app
-from mypass_tui.ui.widgets.epic_input import EpicInput
-from mypass_tui.ui.widgets.feedback import Feedback, show_feedback_on_error
-from mypass_tui.ui.widgets.buttons import ButtonPair
-from mypass_tui.ui.widgets.input_label import InputLabel, LabeledInput, get_invalid_fields
-from mypass_tui.ui.widgets.password import Password, PasswordStrength
+from textual.widgets import Button, Footer, Label, TabbedContent, TabPane
 
 from mypass_tui import session
 from mypass_tui.exception.api import ApiException
-from mypass_tui.exception.validator import RequiredException, ValidatorException
+from mypass_tui.exception.validator import (RequiredException,
+                                            ValidatorException)
 from mypass_tui.localization import i18n
 from mypass_tui.model.user import User
 from mypass_tui.settings import bindings
+from mypass_tui.ui.util.scrape import clear_inputs, scrape_inputs
+from mypass_tui.ui.util.session import exit_app
+from mypass_tui.ui.widgets.buttons import ButtonPair
+from mypass_tui.ui.widgets.epic_input import EpicInput
+from mypass_tui.ui.widgets.feedback import Feedback, show_feedback_on_error
+from mypass_tui.ui.widgets.input_label import (InputLabel, LabeledInput,
+                                               get_invalid_fields)
+from mypass_tui.ui.widgets.password import Password, PasswordStrength
 
 
 class SignScreen(Screen):
-
     BINDINGS = [
         Binding(bindings["sign_in"], "signin_tab", i18n.footer__sign_in, show=True),
         Binding(bindings["sign_up"], "signup_tab", i18n.footer__sign_up, show=True),
@@ -34,13 +34,17 @@ class SignScreen(Screen):
                 yield ScrollableContainer(
                     LabeledInput(
                         InputLabel(i18n.label__username, required=True),
-                        EpicInput(id="username", placeholder=i18n.placeholder__sign_in__username, classes="labeled_input"),
+                        EpicInput(
+                            id="username", placeholder=i18n.placeholder__sign_in__username, classes="labeled_input"
+                        ),
                     ),
                     LabeledInput(
                         InputLabel(i18n.label__password, required=True),
-                        Password(id="password", placeholder=i18n.placeholder__sign_in__password, classes="labeled_input"),
+                        Password(
+                            id="password", placeholder=i18n.placeholder__sign_in__password, classes="labeled_input"
+                        ),
                     ),
-                    id="signin_input_container"
+                    id="signin_input_container",
                 )
                 yield ButtonPair(
                     left_text=i18n.button__sign_in,
@@ -55,26 +59,37 @@ class SignScreen(Screen):
                 yield ScrollableContainer(
                     LabeledInput(
                         InputLabel(i18n.label__username, required=True),
-                        EpicInput(id="username", placeholder=i18n.placeholder__sign_up__username, classes="labeled_input"),
+                        EpicInput(
+                            id="username", placeholder=i18n.placeholder__sign_up__username, classes="labeled_input"
+                        ),
                     ),
                     LabeledInput(
                         InputLabel(i18n.label__password, required=True),
-                        Password(id="password", placeholder=i18n.placeholder__sign_up__password, classes="labeled_input", strength_bar=signup_pw_strength),
+                        Password(
+                            id="password",
+                            placeholder=i18n.placeholder__sign_up__password,
+                            classes="labeled_input",
+                            strength_bar=signup_pw_strength,
+                        ),
                     ),
                     signup_pw_strength,
                     LabeledInput(
                         InputLabel(i18n.label__first_name),
-                        EpicInput(id="firstname", placeholder=i18n.placeholder__sign_up__first_name, classes="labeled_input"),
+                        EpicInput(
+                            id="firstname", placeholder=i18n.placeholder__sign_up__first_name, classes="labeled_input"
+                        ),
                     ),
                     LabeledInput(
                         InputLabel(i18n.label__last_name),
-                        EpicInput(id="lastname", placeholder=i18n.placeholder__sign_up__last_name, classes="labeled_input"),
+                        EpicInput(
+                            id="lastname", placeholder=i18n.placeholder__sign_up__last_name, classes="labeled_input"
+                        ),
                     ),
                     LabeledInput(
                         InputLabel(i18n.label__email),
                         EpicInput(id="email", placeholder=i18n.placeholder__sign_up__email, classes="labeled_input"),
                     ),
-                    id="signup_input_container"
+                    id="signup_input_container",
                 )
                 yield ButtonPair(
                     left_text=i18n.button__sign_up,
@@ -99,13 +114,11 @@ class SignScreen(Screen):
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:
-            inputs = {
-                key: val
-                for key, val in scrape_inputs(tab).items()
-            }
+            inputs = {key: val for key, val in scrape_inputs(tab).items()}
             session.user = User.login(**inputs)
 
             from .main import MainScreen
+
             self.app.switch_screen(MainScreen())
 
     @show_feedback_on_error(ApiException, ValidatorException, selector="#signup_feedback")
@@ -116,14 +129,12 @@ class SignScreen(Screen):
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:
-            inputs = {
-                key: val
-                for key, val in scrape_inputs(tab).items()
-            }
+            inputs = {key: val for key, val in scrape_inputs(tab).items()}
             clear_inputs(tab)
             session.user, token = User.registration(**inputs)
 
             from .token import TokenScreen
+
             self.app.push_screen(TokenScreen(token))
 
     def on_exit_pressed(self, _: Button.Pressed):

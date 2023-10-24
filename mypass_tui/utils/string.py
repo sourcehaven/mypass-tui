@@ -40,7 +40,7 @@ def replace_empty_string_with_none(val: str | None):
 
 
 def snake_case_text_to_sentence(text: str):
-    words = text.split('_')
+    words = text.split("_")
     words[0] = words[0].capitalize()
     return " ".join(words)
 
@@ -48,4 +48,4 @@ def snake_case_text_to_sentence(text: str):
 def split_path(path: str | None):
     if path is None:
         return []
-    return tuple(part for part in re.split(r'[\\/]', path))
+    return tuple(part for part in re.split(r"[\\/]", path))

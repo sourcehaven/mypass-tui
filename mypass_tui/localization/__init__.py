@@ -1,21 +1,20 @@
-import re
-
-import yaml
 import os.path
+import re
 from functools import wraps
 from typing import Callable
 
+import yaml
+
 from mypass_tui.paths import I18N_PATH
-from mypass_tui.settings import settings, bindings
+from mypass_tui.settings import bindings, settings
 
 
 def translate(func: Callable):
     @wraps(func)
     def wrapper(self):
-
         def get_text() -> str:
             data = self.data
-            for part in func.__name__.split('__'):
+            for part in func.__name__.split("__"):
                 data = data[part]
             return data
 
@@ -23,18 +22,18 @@ def translate(func: Callable):
             dynamic_values = func(self)
             if dynamic_values:
                 if isinstance(dynamic_values, str):
-                    dynamic_values = dynamic_values,
+                    dynamic_values = (dynamic_values,)
 
                 for value in dynamic_values:
-                    val = val.replace('{}', f'[bold]{value}[/bold]', 1)
+                    val = val.replace("{}", f"[bold]{value}[/bold]", 1)
             return val
 
         def create_versions(val: str):
-            pattern = r'{([^}]+)}'
+            pattern = r"{([^}]+)}"
             matches = re.findall(pattern, val)
 
             if matches:
-                options = matches[0].split('/')
+                options = matches[0].split("/")
                 return [re.sub(pattern, f"[bold][italic]{option}[/bold][/italic]", val) for option in options]
             else:
                 return val
@@ -44,19 +43,16 @@ def translate(func: Callable):
         text = create_versions(text)
 
         return text
+
     return property(wrapper)
 
 
 def get_language_codes():
-    file_names = [
-        f for f in os.listdir(I18N_PATH)
-        if os.path.isfile(os.path.join(I18N_PATH, f))
-    ]
-    return [name.split('.')[0] for name in file_names]
+    file_names = [f for f in os.listdir(I18N_PATH) if os.path.isfile(os.path.join(I18N_PATH, f))]
+    return [name.split(".")[0] for name in file_names]
 
 
 class I18N:
-
     def __init__(self, path=I18N_PATH, locale: str = settings["locale"]):
         self.data = {}
         self.path = path
