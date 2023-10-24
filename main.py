@@ -1,16 +1,14 @@
 import argparse
 
-from src.model.shared import set_url
-from src.ui.app import MyPassApp
+from mypass_tui.model.user import User
+from mypass_tui.ui.app import MyPassApp
 
 
 def main(host: str, port: str):
     base_url = f'{host}:{port}'
 
-    set_url(
-        f'{base_url}/api/auth/',
-        f'{base_url}/api/db/vault/'
-    )
+    User.auth_url = f'{base_url}/api/auth/'
+    User.vault_url = f'{base_url}/api/db/vault/'
 
     app = MyPassApp()
     app.run()

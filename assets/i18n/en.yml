@@ -1,0 +1,93 @@
+label:
+  username: Username
+  password: Password
+  first_name: First name
+  last_name: Last name
+  email: Email
+  title: Title
+  website: Website
+  folder: Folder
+  tags: Tags
+  notes: Notes
+
+footer:
+  sign_in: Sign In
+  sign_up: Sign Up
+  new: New
+  table: Table view
+  folder: Folder view
+  tile: Tile view
+  settings: Settings
+  theme: Theme
+  key_binds: Key bindings
+  help: Help
+  about: About
+  quit: Quit
+
+tab:
+  sign_in: Sign In
+  sign_up: Sign Up
+  new: New
+  table: Table view
+  folder: Folder view
+  tile: Tile view
+  settings: Settings
+  theme: Theme
+  key_binds: Key bindings
+  help: Help
+  about: About
+
+title:
+  sign_in: Sign In
+  sign_up: Sign Up
+  new: New
+  table: Table view
+  folder: Folder view
+  tile: Tile view
+  display: Display
+  edit: Edit
+  settings: Settings
+  exit: Exit app
+
+button:
+  sign_in: Sign In
+  sign_up: Sign Up
+  quit: Quit
+  save: Save
+  submit: Submit
+  cancel: Cancel
+  "yes": "Yes"
+  "no": "No"
+
+cut: Cut
+copy: Copy
+paste: Paste
+
+placeholder:
+  sign_in:
+    username: TODO - Add text
+    password: TODO - Add text
+  sign_up:
+    username: TODO - Add text
+    password: TODO - Add text
+    first_name: TODO - Add text
+    last_name: TODO - Add text
+    email: TODO - Add text
+  new:
+    username: TODO - Add text
+    password: TODO - Add text
+    title: TODO - Add text
+    website: TODO - Add text
+    folder: TODO - Add text
+    tags: TODO - Add text
+    notes: TODO - Add text
+
+feedback:
+  success:
+    new_entry: Vault entry created successfully!
+  info:
+    display_mode: Not allowed to edit text in "Display" mode. Press {} to switch to "Edit" mode.
+
+subtitle:
+  show_hide_password: Press {} to {show/hide} password
+  confirm_quit: Are you sure you want to exit?

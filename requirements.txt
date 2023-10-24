@@ -3,3 +3,4 @@ textual
 pyperclip
 requests
 git+https://github.com/Ricky294/perdict
+PyYAML

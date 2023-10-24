@@ -8,7 +8,7 @@ setup(
     author="ricky :) (: skyzip",
     license="MIT",
     packages=["mypass_tui"],
-    package_dir={"mypass_tui": "src"},
+    package_dir={"mypass_tui": "mypass_tui"},
     install_requires=["textual", "pyperclip"],
     package_data={"": ["license"]},
 )

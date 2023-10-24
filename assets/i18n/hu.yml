@@ -1,0 +1,93 @@
+label:
+  username: Felhasználónév
+  password: Jelszó
+  first_name: Keresztnév
+  last_name: Családnév
+  email: Email
+  title: Cím
+  website: Weboldal
+  folder: Mappa
+  tags: Címkék
+  notes: Jegyzet
+
+footer:
+  sign_in: Bejelentkezés
+  sign_up: Regisztráció
+  new: Új
+  table: Tábla nézet
+  folder: Mappa nézet
+  tile: Csempe nézet
+  settings: Beállítások
+  theme: Téma
+  key_binds: Gyorsbillentyűk
+  help: Súgó
+  about: Névjegy
+  quit: Kilépés
+
+tab:
+  sign_in: Bejelentkezés
+  sign_up: Regisztráció
+  new: Új
+  table: Tábla nézet
+  folder: Mappa nézet
+  tile: Csempe nézet
+  settings: Beállítások
+  theme: Téma
+  key_binds: Gyorsbillentyűk
+  help: Súgó
+  about: Névjegy
+
+title:
+  sign_in: Bejelentkezés
+  sign_up: Regisztráció
+  new: Új
+  table: Tábla nézet
+  folder: Mappa nézet
+  tile: Csempe nézet
+  display: Megjelenító mód
+  edit: Szerkesztő mód
+  settings: Beállítások
+  exit: Alkalmazás bezárása
+
+button:
+  sign_in: Bejelentkezés
+  sign_up: Regisztráció
+  quit: Kilépés
+  save: Mentés
+  submit: Küldés
+  cancel: Mégse
+  "yes": Igen
+  "no": Nem
+
+cut: Kivágás
+copy: Másolás
+paste: Beillesztés
+
+placeholder:
+  sign_in:
+    username: TODO - Add text
+    password: TODO - Add text
+  sign_up:
+    username: TODO - Add text
+    password: TODO - Add text
+    first_name: TODO - Add text
+    last_name: TODO - Add text
+    email: TODO - Add text
+  new:
+    username: TODO - Add text
+    password: TODO - Add text
+    title: TODO - Add text
+    website: TODO - Add text
+    folder: TODO - Add text
+    tags: TODO - Add text
+    notes: TODO - Add text
+
+feedback:
+  success:
+    new_entry: Széf bejegyzés sikeresen létrehozva!
+  info:
+    display_mode: A mező nem szerkesztető "Megjelenítő" nézetben. Nyomja meg a {} billentyűt, sdhogy "Szerkesztő" nézetbe váltson.
+
+subtitle:
+  show_hide_password: Nyomja meg a {} billentyűt a jelsző {megjelenítéséhez/elrejtéséhez}
+  confirm_quit: Biztosan ki szeretne lépni?
