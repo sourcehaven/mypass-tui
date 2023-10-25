@@ -1,6 +1,6 @@
 import argparse
 
-from mypass_tui.model.user import User
+from mypass_tui.model import User
 from mypass_tui.ui.app import MyPassApp
 
 

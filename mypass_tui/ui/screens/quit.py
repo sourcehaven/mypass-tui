@@ -1,7 +1,7 @@
 from textual.widgets import Button, Label
 
 from mypass_tui.localization import i18n
-from mypass_tui.ui.screens.secondary import DialogScreen
+from mypass_tui.ui.screens import DialogScreen
 
 
 class QuitScreen(DialogScreen):

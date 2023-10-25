@@ -4,19 +4,20 @@ from textual.containers import ScrollableContainer
 from textual.widgets import Button, Label, Static
 
 from mypass_tui import session
-from mypass_tui.exception.validator import (RequiredException,
-                                            ValidatorException)
+from mypass_tui.exception import RequiredException, ValidatorException
 from mypass_tui.localization import i18n
-from mypass_tui.model.vault_entry import VaultEntry
+from mypass_tui.model import VaultEntry
 from mypass_tui.ui.util.scrape import clear_inputs, scrape_inputs
-from mypass_tui.ui.widgets.dynamic_text_area import DynamicTextArea
-from mypass_tui.ui.widgets.epic_input import EpicInput
-from mypass_tui.ui.widgets.feedback import Feedback, show_feedback_on_error
-from mypass_tui.ui.widgets.gap import Gap
-from mypass_tui.ui.widgets.input_label import (InputLabel, LabeledInput,
-                                               get_invalid_fields)
-from mypass_tui.ui.widgets.password import Password
-from mypass_tui.ui.widgets.vault_table import VaultTable
+from mypass_tui.ui.widgets import (
+    Gap,
+    InputLabel,
+    LabeledInput,
+    DynamicTextArea,
+    EpicInput,
+    Feedback,
+    Password,
+    VaultTable,
+)
 
 NEW_PAGE_ID = "new_page"
 
@@ -63,9 +64,9 @@ class NewEntryPage(Static):
         yield Feedback()
 
     @on(Button.Pressed, "#save_btn")
-    @show_feedback_on_error(ValidatorException, selector=Feedback)
+    @Feedback.on_error(ValidatorException, selector=Feedback)
     def on_save_btn_pressed(self, _: Button.Pressed):
-        invalid_fields = get_invalid_fields(self)
+        invalid_fields = LabeledInput.get_invalid_fields(self)
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:

@@ -1,17 +1,10 @@
-from enum import Enum, auto
 from typing import Type
 
 from textual.css.query import QueryType
 from textual.dom import DOMNode
 from textual.widgets import Static
 
-
-class FeedbackStyle(Enum):
-    SUCCESS = auto()
-    ERROR = auto()
-    INFO = auto()
-    NEUTRAL = auto()
-    WARNING = auto()
+from mypass_tui.model import FeedbackStyle
 
 
 class Feedback(Static):
@@ -177,26 +170,26 @@ class Feedback(Static):
             animation_seconds=animation_seconds,
         )
 
+    @staticmethod
+    def on_error(
+        *exc: Type[Exception],
+        selector: str | Type[QueryType] = None,
+        display_seconds: int = DEFAULT_DISPLAY_SECONDS,
+        animation_seconds: int = DEFAULT_ANIMATION_SECONDS,
+    ):
+        def decorator(func):
+            def wrapper(self, *args, **kwargs):
+                try:
+                    return func(self, *args, **kwargs)
+                except exc as e:
+                    Feedback.error(
+                        node=self,
+                        text=str(e),
+                        selector=selector,
+                        display_seconds=display_seconds,
+                        animation_seconds=animation_seconds,
+                    )
 
-def show_feedback_on_error(
-    *exc: Type[Exception],
-    selector: str | Type[QueryType] = None,
-    display_seconds: int = Feedback.DEFAULT_DISPLAY_SECONDS,
-    animation_seconds: int = Feedback.DEFAULT_ANIMATION_SECONDS,
-):
-    def decorator(func):
-        def wrapper(self, *args, **kwargs):
-            try:
-                return func(self, *args, **kwargs)
-            except exc as e:
-                Feedback.error(
-                    node=self,
-                    text=str(e),
-                    selector=selector,
-                    display_seconds=display_seconds,
-                    animation_seconds=animation_seconds,
-                )
+            return wrapper
 
-        return wrapper
-
-    return decorator
+        return decorator

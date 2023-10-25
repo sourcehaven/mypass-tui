@@ -4,17 +4,12 @@ import darkdetect
 from textual.app import App
 from textual.binding import Binding
 from textual.reactive import Reactive
-from textual.screen import (ModalScreen, Screen, ScreenResultCallbackType,
-                            ScreenResultType)
+from textual.screen import ModalScreen, Screen, ScreenResultCallbackType, ScreenResultType
 from textual.widget import AwaitMount
 
 from mypass_tui.localization import i18n
 from mypass_tui.settings import bindings, settings
-from mypass_tui.ui.screens.about import AboutScreen
-from mypass_tui.ui.screens.help import HelpScreen
-from mypass_tui.ui.screens.input import InputScreen
-from mypass_tui.ui.screens.password import PasswordDialog
-from mypass_tui.ui.screens.sign import SignScreen
+from mypass_tui.ui.screens import AboutScreen, HelpScreen, InputScreen, PasswordDialog, SignScreen
 from mypass_tui.ui.util.session import exit_app
 
 
@@ -72,7 +67,8 @@ class MyPassApp(App):
             bindings.save(inputs)
 
         self.push_screen(
-            InputScreen(bindings, title=i18n.title__sign_in, submit_btn_text=i18n.button__save), callback=callback
+            InputScreen(title=i18n.title__sign_in, inputs=bindings, submit_btn_text=i18n.button__save),
+            callback=callback,
         )
 
     def action_settings(self):
@@ -80,7 +76,8 @@ class MyPassApp(App):
             settings.save(inputs)
 
         self.push_screen(
-            InputScreen(settings, title=i18n.title__settings, submit_btn_text=i18n.button__save), callback=callback
+            InputScreen(title=i18n.title__settings, inputs=settings, submit_btn_text=i18n.button__save),
+            callback=callback,
         )
 
     def action_help_screen(self):

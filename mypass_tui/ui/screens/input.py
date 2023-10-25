@@ -2,21 +2,12 @@ from textual.containers import ScrollableContainer
 from textual.widgets import Button, Select, Switch
 
 import mypass_tui.model.password as mpw
-from mypass_tui.exception.validator import (
-    RequiredException,
-    ValidatorException,
-)
+from mypass_tui.exception.validator import RequiredException, ValidatorException
 from mypass_tui.localization import i18n
-from mypass_tui.model.input_info import InputInfo
-from mypass_tui.ui.screens.secondary import DialogScreen
-from mypass_tui.ui.widgets import Password
-from mypass_tui.ui.widgets.epic_input import EpicInput
-from mypass_tui.ui.widgets.feedback import Feedback, show_feedback_on_error
-from mypass_tui.ui.widgets.input_label import (
-    InputLabel,
-    LabeledInput,
-    get_invalid_fields,
-)
+from mypass_tui.model import InputInfo
+from mypass_tui.ui.screens import DialogScreen
+from mypass_tui.ui.widgets import EpicInput, Feedback, Password, InputLabel, LabeledInput
+
 
 class InputScreen(DialogScreen):
     def __init__(
@@ -75,9 +66,9 @@ class InputScreen(DialogScreen):
         )
         yield Feedback(id="inputs_feedback")
 
-    @show_feedback_on_error(ValidatorException, selector="#inputs_feedback")
+    @Feedback.on_error(ValidatorException, selector="#inputs_feedback")
     def on_submit_pressed(self, _: Button.Pressed):
-        invalid_fields = get_invalid_fields(self)
+        invalid_fields = LabeledInput.get_invalid_fields(self)
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:

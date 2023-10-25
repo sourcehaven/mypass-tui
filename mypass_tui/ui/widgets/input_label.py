@@ -18,7 +18,7 @@ class InputLabel(Label):
     def __init__(self, text: str, required: bool = False, length: int = 16):
         super().__init__()
         self.required = required
-        self.text = format_field_text(text, length=length, required=required)
+        self.text = LabeledInput.format_field_text(text, length=length, required=required)
 
     def compose(self):
         yield Label(self.text)
@@ -63,19 +63,19 @@ class LabeledInput(Static):
     def has_input(self):
         return bool(self.value)
 
+    @staticmethod
+    def get_invalid_fields(node: DOMNode):
+        labeled_inputs = node.query(LabeledInput)
+        return [
+            labeled_input.label.text.replace(REQUIRED_TEXT, "").strip()
+            for labeled_input in labeled_inputs
+            if not labeled_input.is_valid
+        ]
 
-def get_invalid_fields(node: DOMNode):
-    labeled_inputs = node.query(LabeledInput)
-    return [
-        labeled_input.label.text.replace(REQUIRED_TEXT, "").strip()
-        for labeled_input in labeled_inputs
-        if not labeled_input.is_valid
-    ]
+    @staticmethod
+    def format_field_text(text: str, length: int, required=False):
+        if required:
+            text += REQUIRED_TEXT
+            length += len(REQUIRED_TEXT) - 2
 
-
-def format_field_text(text: str, length: int, required=False):
-    if required:
-        text += REQUIRED_TEXT
-        length += len(REQUIRED_TEXT) - 2
-
-    return f"{text:<{length}}"
+        return f"{text:<{length}}"

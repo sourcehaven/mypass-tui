@@ -4,7 +4,17 @@ from textual.widgets import Footer, TabbedContent, TabPane
 
 from mypass_tui.localization import i18n
 from mypass_tui.settings import bindings
-from mypass_tui.ui.pages import *
+from mypass_tui.ui.screens import (
+    NEW_PAGE_ID,
+    TABLE_PAGE_ID,
+    FOLDER_PAGE_ID,
+    NewEntryPage,
+    TablePage,
+    FolderPage,
+    TilePage,
+    TILE_PAGE_ID,
+)
+
 from mypass_tui.ui.util.session import sign_out
 
 

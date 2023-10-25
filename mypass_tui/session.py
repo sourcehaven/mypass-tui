@@ -1,3 +1,3 @@
-from mypass_tui.model.user import User
+from mypass_tui.model import User
 
 user: User | None = None

@@ -15,6 +15,7 @@ from mypass_tui.model.vault_entry import VaultEntry
 from mypass_tui.settings import bindings
 from mypass_tui.utils.string import to_string
 
+
 cursors = cycle(["row", "column", "cell"])
 
 
@@ -115,8 +116,8 @@ class VaultTable(DataTable):
                 name=column_key.value, value=selected_cell.value, required=VaultEntry.REQUIRED[self.cursor_column]
             )
         ]
-        inputs = {column_key.value: selected_cell.value}
-        from mypass_tui.ui.screens.input import InputScreen
+
+        from mypass_tui.ui.screens import InputScreen
 
         self.app.push_screen(
             InputScreen(title=i18n.title__edit, inputs=inputs),
@@ -131,7 +132,7 @@ class VaultTable(DataTable):
             InputInfo(name=col, value=val, required=req)
             for col, val, req in zip(self.column_labels, values, VaultEntry.REQUIRED)
         ]
-        from mypass_tui.ui.screens.input import InputScreen
+        from mypass_tui.ui.screens import InputScreen
 
         self.app.push_screen(
             InputScreen(title=i18n.title__edit, inputs=inputs),

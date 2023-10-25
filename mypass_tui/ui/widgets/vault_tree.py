@@ -5,7 +5,6 @@ from textual.widgets import Tree
 from mypass_tui import session
 from mypass_tui.localization import i18n
 from mypass_tui.model.vault_entry import TITLE, VaultEntry, append_tree
-from mypass_tui.ui.screens.input import InputScreen
 
 OPEN_FOLDER = "📂 "
 CLOSED_FOLDER = "📁 "
@@ -49,6 +48,8 @@ class VaultTree(Tree):
         node.set_label(node.label.plain.replace(CLOSED_FOLDER, OPEN_FOLDER))
 
     def on_tree_node_selected(self, selected: Tree.NodeSelected):
+        from mypass_tui.ui.screens import InputScreen
+
         node = selected.node
 
         def callback(fields):

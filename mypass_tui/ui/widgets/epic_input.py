@@ -85,7 +85,6 @@ class EpicInput(Input):
     def action_cut(self):
         pyperclip.copy(self.value)
         self.value = ""
-
         Feedback.info(self.screen, f"{self.id.title()} cut to clipboard")
 
     def action_copy(self):

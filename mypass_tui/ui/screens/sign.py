@@ -6,19 +6,13 @@ from textual.widgets import Button, Footer, Label, TabbedContent, TabPane
 
 from mypass_tui import session
 from mypass_tui.exception.api import ApiException
-from mypass_tui.exception.validator import (RequiredException,
-                                            ValidatorException)
+from mypass_tui.exception.validator import RequiredException, ValidatorException
 from mypass_tui.localization import i18n
 from mypass_tui.model.user import User
 from mypass_tui.settings import bindings
 from mypass_tui.ui.util.scrape import clear_inputs, scrape_inputs
 from mypass_tui.ui.util.session import exit_app
-from mypass_tui.ui.widgets.buttons import ButtonPair
-from mypass_tui.ui.widgets.epic_input import EpicInput
-from mypass_tui.ui.widgets.feedback import Feedback, show_feedback_on_error
-from mypass_tui.ui.widgets.input_label import (InputLabel, LabeledInput,
-                                               get_invalid_fields)
-from mypass_tui.ui.widgets.password import Password, PasswordStrength
+from mypass_tui.ui.widgets import ButtonPair, EpicInput, Feedback, InputLabel, LabeledInput, Password, PasswordStrength
 
 
 class SignScreen(Screen):
@@ -106,11 +100,11 @@ class SignScreen(Screen):
     def action_signup_tab(self):
         self.query_one(TabbedContent).active = "signup_tab"
 
-    @show_feedback_on_error(ApiException, ValidatorException, selector="#signin_feedback")
+    @Feedback.on_error(ApiException, ValidatorException, selector="#signin_feedback")
     def on_signin_pressed(self, _: Button.Pressed):
         tab = self.screen.query_one("#signin_input_container")
 
-        invalid_fields = get_invalid_fields(tab)
+        invalid_fields = LabeledInput.get_invalid_fields(tab)
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:
@@ -121,11 +115,11 @@ class SignScreen(Screen):
 
             self.app.switch_screen(MainScreen())
 
-    @show_feedback_on_error(ApiException, ValidatorException, selector="#signup_feedback")
+    @Feedback.on_error(ApiException, ValidatorException, selector="#signup_feedback")
     def on_signup_pressed(self, _: Button.Pressed):
         tab = self.screen.query_one("#signup_input_container")
 
-        invalid_fields = get_invalid_fields(tab)
+        invalid_fields = LabeledInput.get_invalid_fields(tab)
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:

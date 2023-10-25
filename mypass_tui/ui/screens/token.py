@@ -1,8 +1,9 @@
 import pyperclip
 from textual.widgets import Button, Label
 
-from mypass_tui.ui.screens.secondary import DialogScreen
-from mypass_tui.ui.widgets.feedback import Feedback, FeedbackStyle
+from mypass_tui.model import FeedbackStyle
+from mypass_tui.ui.screens import DialogScreen
+from mypass_tui.ui.widgets import Feedback
 
 
 class TokenScreen(DialogScreen):
