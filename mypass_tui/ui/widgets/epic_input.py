@@ -7,7 +7,9 @@ from textual.suggester import Suggester
 from textual.validation import Validator
 from textual.widgets import Input
 
-from mypass_tui.settings import bindings
+from mypass_tui.globals import i18n, bindings
+from mypass_tui.localization import fill_placeholders
+from mypass_tui.ui.util.query import query_active_tab
 from mypass_tui.ui.widgets import Feedback
 
 
@@ -19,37 +21,11 @@ class EpicInput(Input):
     ]
 
     DEFAULT_CSS = """
-    Input {
-        background: $boost;
-        color: $text;
-        padding: 0 2;
-        border: tall $background;
-        width: 100%;
-        height: 1;
-        min-height: 1;
-    }
-    Input:focus {
+    EpicInput:focus {
         border: tall $accent !important;
     }
-    Input:hover {
-        border: tall $accent 20%;
-    }
-    Input>.input--cursor {
-        background: $surface;
-        color: $text;
-        text-style: reverse;
-    }
-    Input>.input--placeholder, Input>.input--suggestion {
-        color: $text-disabled;
-    }
-    Input.-invalid {
-        border: tall $error 60%;
-    }
-    Input.-invalid:focus{
-        border: tall $error !important;
-    }
-    Input.-invalid:hover {
-        border: tall $error 80%;
+    EpicInput:hover {
+        border: tall $accent 40%;
     }
     """
 
@@ -85,11 +61,17 @@ class EpicInput(Input):
     def action_cut(self):
         pyperclip.copy(self.value)
         self.value = ""
-        Feedback.info(self.screen, f"{self.id.title()} cut to clipboard")
+        Feedback.info(
+            query_active_tab(self.screen),
+            fill_placeholders(i18n["feedback"]["info"]["cut"], i18n["label"][self.id])
+        )
 
     def action_copy(self):
         pyperclip.copy(self.value)
-        Feedback.info(self.screen, f"{self.id.title()} copied to clipboard")
+        Feedback.info(
+            query_active_tab(self.screen),
+            fill_placeholders(i18n["feedback"]["info"]["copy"], i18n["label"][self.id])
+        )
 
     def action_paste(self):
         self.value = pyperclip.paste()

@@ -6,7 +6,7 @@ from textual.containers import Container
 from textual.screen import ModalScreen
 from textual.widgets import Button, Label
 
-from mypass_tui.settings import bindings
+from mypass_tui.globals import i18n, bindings
 from mypass_tui.ui.widgets import ButtonPair
 
 
@@ -41,8 +41,8 @@ class DialogScreen(SecondaryScreen):
     def __init__(
         self,
         title: str,
-        submit_btn_text: str = "Submit",
-        cancel_btn_text: str = "Cancel",
+        submit_btn_text: str = i18n["button"]["submit"],
+        cancel_btn_text: str = i18n["button"]["cancel"],
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,

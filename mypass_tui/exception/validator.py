@@ -1,21 +1,20 @@
 from typing import Sequence
 
-from mypass_tui.utils.string import rreplace
-
 
 class ValidatorException(Exception):
     pass
 
 
 class RequiredException(ValidatorException):
-    def __init__(self, names: Sequence[str]):
-        if len(names) == 0:
-            raise ValueError("Must be at least one argument!")
+    def __init__(self, values: Sequence[str]):
+        from mypass_tui.globals import i18n
+        from mypass_tui.localization import fill_placeholders
 
-        concat = ", ".join(names)
-        concat = rreplace(concat, ",", " and", 1)
+        assert len(values) > 0, "Must be at least one argument!"
 
-        if len(names) == 1:
-            super().__init__(f"{concat} field is required!")
+        if len(values) == 1:
+            key = "field_is_required"
         else:
-            super().__init__(f"{concat} fields are required!")
+            key = "fields_are_required"
+
+        super().__init__(fill_placeholders(i18n[key], ", ".join(values)))

@@ -7,12 +7,10 @@ from textual.binding import Binding
 from textual.widgets import DataTable
 from textual.widgets._data_table import RowKey
 
-from mypass_tui import session
-from mypass_tui.localization import i18n
+from mypass_tui.globals import i18n, bindings, user
 from mypass_tui.model.input_info import InputInfo
 from mypass_tui.model.password import Password
 from mypass_tui.model.vault_entry import VaultEntry
-from mypass_tui.settings import bindings
 from mypass_tui.utils.string import to_string
 
 
@@ -34,7 +32,7 @@ class VaultTable(DataTable):
     BINDINGS = [
         Binding(bindings["select"], "select_cursor", "Select", show=False),
         Binding(bindings["copy"], "clipboard_copy", "Copy to clipboard", show=False),
-        Binding(bindings["table_mode"], "table_mode"),
+        Binding(bindings["table_mode"], "table_mode", "Switch between cursor modes", show=False),
         Binding(bindings["password_visibility"], "password_visibility", "Show/hide password", show=False),
     ]
 
@@ -105,22 +103,21 @@ class VaultTable(DataTable):
                 update_width=True,
             )
 
-        session.user.vault_update(id=id, fields=fields)
+        user.vault_update(id=id, fields=fields)
 
     def on_data_table_cell_selected(self, selected_cell: DataTable.CellSelected):
         row_key = selected_cell.cell_key.row_key
         column_key = selected_cell.cell_key.column_key
 
-        inputs = [
-            InputInfo(
-                name=column_key.value, value=selected_cell.value, required=VaultEntry.REQUIRED[self.cursor_column]
-            )
-        ]
-
+        inputs = {column_key.value: InputInfo(
+            text=self.column_labels[self.column_keys.index(column_key.value)],
+            value=selected_cell.value,
+            required=VaultEntry.REQUIRED[self.cursor_column],
+        )}
         from mypass_tui.ui.screens import InputScreen
 
         self.app.push_screen(
-            InputScreen(title=i18n.title__edit, inputs=inputs),
+            InputScreen(title=i18n["title"]["edit"], inputs=inputs),
             callback=callback(row_key)(self.update_cells),
         )
 
@@ -128,14 +125,14 @@ class VaultTable(DataTable):
         row_key = selected_row.row_key
 
         values = self.get_row_at(selected_row.cursor_row)
-        inputs = [
-            InputInfo(name=col, value=val, required=req)
-            for col, val, req in zip(self.column_labels, values, VaultEntry.REQUIRED)
-        ]
+        inputs = {
+            id: InputInfo(text=col, value=val, required=req)
+            for id, col, val, req in zip(self.column_keys, self.column_labels, values, VaultEntry.REQUIRED)
+        }
         from mypass_tui.ui.screens import InputScreen
 
         self.app.push_screen(
-            InputScreen(title=i18n.title__edit, inputs=inputs),
+            InputScreen(title=i18n["title"]["edit"], inputs=inputs),
             callback=callback(row_key)(self.update_cells),
         )
 

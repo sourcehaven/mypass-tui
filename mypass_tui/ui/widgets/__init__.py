@@ -1,6 +1,6 @@
 from .feedback import Feedback
 from .button import ButtonPair
-from .dynamic_text_area import DynamicTextArea
+from .multiline_input import MultilineInput
 from .epic_input import EpicInput
 from .gap import Gap
 from .input_label import InputLabel, LabeledInput

@@ -1,3 +1,5 @@
+from mypass_tui.globals import i18n
+from mypass_tui.localization import fill_placeholders
 from mypass_tui.ui.screens import SecondaryScreen
 
 from textual.app import ComposeResult
@@ -9,20 +11,11 @@ VERSION = "0.0.1-dev"
 AUTHOR = "ricky :) (: skyzip"
 YEAR = 2023
 
-MARKDOWN_TEXT = f"""
-
-MyPass TUI {VERSION}
-
-Text-based user interface for MyPass.
-
-Copyright © {YEAR} {AUTHOR}
-"""
-
 
 class AboutPage(Static):
     def compose(self) -> ComposeResult:
-        yield Label("About MyPass TUI", classes="title")
-        yield Markdown(MARKDOWN_TEXT)
+        yield Label(i18n["title"]["about"], classes="title")
+        yield Markdown(fill_placeholders(i18n["about"], VERSION, YEAR, AUTHOR))
 
 
 class AboutScreen(SecondaryScreen):

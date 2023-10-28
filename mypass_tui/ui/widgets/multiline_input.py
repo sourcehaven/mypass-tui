@@ -1,10 +1,11 @@
+from textual.binding import Binding
 from textual.events import Key
 from textual.widgets import TextArea
 
 
-class DynamicTextArea(TextArea):
+class MultilineInput(TextArea):
     DEFAULT_CSS = """
-    DynamicTextArea {   
+    MultilineInput {   
         width: 1fr;
         height: 1;
     }
@@ -25,3 +26,5 @@ class DynamicTextArea(TextArea):
                 self.styles.height = line_count
             else:
                 self.styles.height = line_count - 1
+        # elif key.name == "tab":
+        #     self.screen.focus_next()

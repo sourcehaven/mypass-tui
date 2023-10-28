@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Any, Final
 
-from mypass_tui.localization import i18n
 from mypass_tui.model.input_info import InputInfo
 from mypass_tui.model.password import Password
 from mypass_tui.utils.string import split_path, to_string
@@ -22,15 +21,6 @@ DELETED_AT: Final = "deleted_at"
 
 
 class VaultEntry:
-    TRANSLATED_FIELDS = (
-        i18n.label__username,
-        i18n.label__password,
-        i18n.label__title,
-        i18n.label__website,
-        i18n.label__folder,
-        i18n.label__notes,
-        i18n.label__tags,
-    )
     API_FIELDS = USERNAME, PASSWORD, TITLE, WEBSITE, FOLDER, NOTES, TAGS
     REQUIRED = True, True, False, False, False, False, False
 
@@ -88,11 +78,12 @@ class VaultEntry:
         self.notes = dct.get(NOTES, self.notes)
         self.tags = dct.get(TAGS, self.tags)
 
-    def input_details(self):
-        return [
-            InputInfo(field, val, req)
-            for field, val, req in zip(VaultEntry.TRANSLATED_FIELDS, self.values, VaultEntry.REQUIRED)
-        ]
+    def input_details(self, texts: str):
+        return {
+            id: InputInfo(text=text, value=val, required=req)
+            for id, text, val, req
+            in zip(VaultEntry.API_FIELDS, texts, self.values, VaultEntry.REQUIRED)
+        }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], date_format="%Y-%m-%dT%H:%M:%S", hide_password=True):

@@ -3,8 +3,8 @@ from textual.widgets import Button, Select, Switch
 
 import mypass_tui.model.password as mpw
 from mypass_tui.exception.validator import RequiredException, ValidatorException
-from mypass_tui.localization import i18n
-from mypass_tui.model import InputInfo
+from mypass_tui.globals import i18n
+from mypass_tui.model import InputInfo, DefaultList
 from mypass_tui.ui.screens import DialogScreen
 from mypass_tui.ui.widgets import EpicInput, Feedback, Password, InputLabel, LabeledInput
 
@@ -13,18 +13,15 @@ class InputScreen(DialogScreen):
     def __init__(
         self,
         title: str,
-        inputs: list[InputInfo] | dict,
-        submit_btn_text: str = i18n.button__submit,
-        cancel_btn_text: str = i18n.button__cancel,
+        inputs: dict[str, InputInfo],
+        submit_btn_text: str = i18n["button"]["submit"],
+        cancel_btn_text: str = i18n["button"]["cancel"],
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,
         *args,
         **kwargs,
     ):
-        if isinstance(inputs, dict):
-            inputs = [InputInfo(name=key, value=val, required=False) for key, val in inputs.items()]
-
         self.inputs = inputs
         self.args = args
         self.kwargs = kwargs
@@ -39,24 +36,25 @@ class InputScreen(DialogScreen):
         )
 
     def _build_content(self):
-        for info in self.inputs:
-            value = info.value if info.value else ""
+        for id, info in self.inputs.items():
+            if info.value is None:
+                value = ''
+            else:
+                value = info.value
 
-            if isinstance(value, list):
-                input_widget = Select(options=[(val, val) for val in value], id=info.name, classes="labeled_input")
+            if isinstance(value, DefaultList):
+                input_widget = Select(id=id, options=[(val, val) for val in value], value=value.default_value, allow_blank=False, classes="labeled_input")
             elif isinstance(value, str):
-                input_widget = EpicInput(id=info.name, value=value, classes="labeled_input")
+                input_widget = EpicInput(id=id, value=value, classes="labeled_input")
             elif isinstance(value, mpw.Password):
-                input_widget = Password(
-                    id=info.name, value=value.data, password=value.is_hidden, classes="labeled_input"
-                )
+                input_widget = Password(id=id, value=value.data, password=value.is_hidden, classes="labeled_input")
             elif isinstance(value, bool):
-                input_widget = Switch(id=info.name, value=value, animate=True)
+                input_widget = Switch(id=id, value=value, animate=True)
             else:
                 raise ValueError(f"Invalid value: {value!r}")
 
             yield LabeledInput(
-                InputLabel(info.name, required=info.required),
+                InputLabel(info.text, required=info.required),
                 input_widget,
             )
 

@@ -2,7 +2,7 @@ from textual.app import ComposeResult
 from textual.containers import Container
 from textual.dom import DOMNode
 from textual.widget import Widget
-from textual.widgets import Input, Label, Static, Switch, TextArea
+from textual.widgets import Input, Label, Static, Switch, TextArea, Select
 
 REQUIRED_TEXT = " [red]*[/red]"
 
@@ -56,6 +56,8 @@ class LabeledInput(Static):
         if isinstance(self.input, TextArea):
             return self.input.text
         if isinstance(self.input, Switch):
+            return self.input.value
+        if isinstance(self.input, Select):
             return self.input.value
 
         raise ValueError("Must be an instance of Input or TextArea")

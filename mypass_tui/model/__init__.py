@@ -1,3 +1,4 @@
+from .default_list import DefaultList
 from .input_info import InputInfo
 from .password import Password
 from .user import User

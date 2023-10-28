@@ -8,13 +8,10 @@ from textual.validation import Validator
 from textual.widgets import Input, Label, ProgressBar, Static
 
 import mypass_tui.model.password as mpw
-from mypass_tui.settings import bindings, settings
+from mypass_tui.globals import i18n, bindings, settings
 
-from ...localization import i18n
-from .epic_input import EpicInput
-
-SHOW = "Show"
-HIDE = "Hide"
+from mypass_tui.localization import fill_placeholders, select_placeholder
+from mypass_tui.ui.widgets.epic_input import EpicInput
 
 
 class PasswordStrengthBar(ProgressBar):
@@ -83,8 +80,13 @@ class Password(EpicInput):
     BINDINGS = [Binding(bindings["password_visibility"], "show_hide", show=False)]
 
     def _set_hint(self, show=True):
-        index = 0 if show else 1
-        self.border_subtitle = i18n.subtitle__show_hide_password[index]
+        show_hide_index = 0 if show else 1
+        self.border_subtitle = (
+            select_placeholder(
+                fill_placeholders(i18n["subtitle"]["show_hide_password"],bindings["password_visibility"])
+                , show_hide_index
+            )
+        )
 
     def __init__(
         self,
