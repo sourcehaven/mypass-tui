@@ -1,0 +1,7 @@
+site_name: MyPass TUI
+repo_url: https://github.com/sourcehaven/mypass-tui
+# repo_name:
+site_author: "ricky :) (: skyzip"
+copyright: "Copyright © ricky :) (: skyzip"
+theme:
+  name: material
