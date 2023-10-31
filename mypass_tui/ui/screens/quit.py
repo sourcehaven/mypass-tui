@@ -1,6 +1,7 @@
 from textual.widgets import Button, Label
 
 from mypass_tui.globals import i18n
+from mypass_tui.localization import KEY_BUTTON, KEY_TITLE, KEY_SUBTITLE
 from mypass_tui.ui.screens import DialogScreen
 
 
@@ -16,12 +17,12 @@ class QuitScreen(DialogScreen):
     }
     """
 
-    def __init__(self, title=i18n["title"]["quit"], subtitle=i18n["subtitle"]["confirm_quit"]):
+    def __init__(self, title=i18n[KEY_TITLE]["quit"], subtitle=i18n[KEY_SUBTITLE]["confirm_quit"]):
         self.subtitle = subtitle
         super().__init__(
             title,
-            submit_btn_text=i18n["button"]["yes"],
-            cancel_btn_text=i18n["button"]["no"],
+            submit_btn_text=i18n[KEY_BUTTON]["yes"],
+            cancel_btn_text=i18n[KEY_BUTTON]["no"],
         )
 
     def _compose(self):

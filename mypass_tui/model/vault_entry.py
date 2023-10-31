@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Final
 
-from mypass_tui.model.input_info import InputInfo
+from mypass_tui.model.input_info import InputDetail
 from mypass_tui.model.password import Password
 from mypass_tui.utils.string import split_path, to_string
 
@@ -78,9 +78,11 @@ class VaultEntry:
         self.notes = dct.get(NOTES, self.notes)
         self.tags = dct.get(TAGS, self.tags)
 
-    def input_details(self, texts: str):
+    def input_details(self):
+        from mypass_tui.globals import i18n
+        texts = i18n.vault_entry_labels()
         return {
-            id: InputInfo(text=text, value=val, required=req)
+            id: InputDetail(text=text, value=val, required=req)
             for id, text, val, req
             in zip(VaultEntry.API_FIELDS, texts, self.values, VaultEntry.REQUIRED)
         }

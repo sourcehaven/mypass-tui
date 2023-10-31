@@ -2,7 +2,8 @@ from typing import Iterable
 
 from textual.widgets import Tree
 
-from mypass_tui.globals import i18n, user
+from mypass_tui.globals import i18n, get_user
+from mypass_tui.localization import KEY_TITLE
 from mypass_tui.model.vault_entry import TITLE, VaultEntry, append_tree
 
 OPEN_FOLDER = "📂 "
@@ -53,12 +54,12 @@ class VaultTree(Tree):
 
         def callback(fields):
             if fields:
-                user.vault_update(id=node.data.id, fields=fields)
+                get_user().vault_update(id=node.data.id, fields=fields)
                 node.set_label(FILE + fields[TITLE])
                 node.data.update(fields)
 
         if isinstance(node.data, VaultEntry):
             self.app.push_screen(
-                InputScreen(title=i18n["title"]["edit"], inputs=node.data.input_details()),
+                InputScreen(title=i18n[KEY_TITLE]["edit"], inputs=node.data.input_details()),
                 callback=callback,
             )

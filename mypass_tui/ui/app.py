@@ -8,9 +8,15 @@ from textual.screen import ModalScreen, Screen, ScreenResultCallbackType, Screen
 from textual.widget import AwaitMount
 
 from mypass_tui.globals import i18n, bindings, settings, get_bindings_info, get_settings_info
-from mypass_tui.localization import get_language_codes
-from mypass_tui.model import DefaultList
-from mypass_tui.ui.screens import AboutScreen, HelpScreen, InputScreen, SignScreen
+from mypass_tui.localization import (
+    get_available_language_codes,
+    KEY_BUTTON, KEY_TITLE, KEY_FOOTER, KEY_ABOUT, KEY_BINDINGS,
+    KEY_SETTINGS, KEY_QUIT, KEY_HELP, KEY_THEME, KEY_SAVE,
+    KEY_LOCALE
+)
+from mypass_tui.model import DefaultList, InputDetail
+from mypass_tui.model.input_info import get_id_with_text
+from mypass_tui.ui.screens import AboutScreen, HelpScreen, InputScreen, SignScreen, RestartScreen
 from mypass_tui.ui.util.session import exit_app
 
 
@@ -21,20 +27,19 @@ class MyPassApp(App):
     dark: Reactive[bool] = Reactive(darkdetect.isDark(), compute=False)
 
     App.BINDINGS = [
-        Binding(bindings["quit"], "quit", i18n["footer"]["quit"], priority=True, show=True),
-        Binding(bindings["key_bindings"], "key_bindings", i18n["footer"]["key_binds"], priority=True, show=True),
-        Binding(bindings["settings"], "settings", i18n["footer"]["settings"], priority=True, show=True),
-        Binding(bindings["theme"], "toggle_dark", i18n["footer"]["theme"], priority=True, show=True),
-        Binding(bindings["help"], "help_screen", i18n["footer"]["help"], priority=True, show=True),
-        Binding(bindings["about"], "about_screen", i18n["footer"]["about"], priority=True, show=True),
-        Binding("left", "previous_tab", show=False),
-        Binding("right", "next_tab", show=False),
+        Binding(bindings[KEY_QUIT], KEY_QUIT, i18n[KEY_FOOTER][KEY_QUIT], priority=True, show=True),
+        Binding(bindings[KEY_BINDINGS], KEY_BINDINGS, i18n[KEY_FOOTER][KEY_BINDINGS], priority=True, show=True),
+        Binding(bindings[KEY_SETTINGS], KEY_SETTINGS, i18n[KEY_FOOTER][KEY_SETTINGS], priority=True, show=True),
+        Binding(bindings[KEY_THEME], KEY_THEME, i18n[KEY_FOOTER][KEY_THEME], priority=True, show=True),
+        Binding(bindings[KEY_HELP], KEY_HELP, i18n[KEY_FOOTER][KEY_HELP], priority=True, show=True),
+        Binding(bindings[KEY_ABOUT], KEY_ABOUT, i18n[KEY_FOOTER][KEY_ABOUT], priority=True, show=True),
     ]
 
     def push_screen(
         self,
         screen: Screen[ScreenResultType] | str,
         callback: ScreenResultCallbackType[ScreenResultType] | None = None,
+        wait_for_dismiss: bool = False,
     ) -> AwaitMount:
         if not isinstance(self.screen, ModalScreen):
             return super().push_screen(screen=screen, callback=callback)
@@ -48,40 +53,41 @@ class MyPassApp(App):
         t.start()
 
     def on_mount(self):
-        def refresh_app(*args, **kwargs):
-            self.app.refresh(repaint=True, layout=True)
-
         self.theme_listener()
-        i18n.subscribe_on_locale_change(refresh_app)
         self.push_screen(SignScreen())
 
     def action_quit(self) -> None:
         exit_app(self.app)
 
     def action_key_bindings(self):
-        def callback(inputs: dict[str, str]):
-            bindings.save(inputs)
+        async def callback(new_bindings_details: dict[str, InputDetail]):
+            new_bindings = get_id_with_text(new_bindings_details)
+            if new_bindings != bindings:
+                bindings.save(new_bindings)
+                await self.push_screen(RestartScreen())
 
         self.push_screen(
-            InputScreen(title=i18n["title"]["key_bindings"], inputs=get_bindings_info(), submit_btn_text=i18n["button"]["save"]),
+            InputScreen(title=i18n[KEY_TITLE][KEY_BINDINGS], inputs=get_bindings_info(), submit_btn_text=i18n[KEY_BUTTON][KEY_SAVE]),
             callback=callback,
         )
 
     def action_settings(self):
-        def callback(inputs: dict[str, str]):
-            settings.save(inputs)
+        async def callback(new_setting_details: dict[str, InputDetail]):
+            new_settings = get_id_with_text(new_setting_details)
+            if new_settings != settings:
+                settings.save(new_settings)
+                await self.push_screen(RestartScreen())
 
         settings_info = get_settings_info()
-
-        settings_info["locale"].value = DefaultList(get_language_codes(), settings_info["locale"].value)
+        settings_info[KEY_LOCALE].value = DefaultList(get_available_language_codes(), settings_info[KEY_LOCALE].value)
 
         self.push_screen(
-            InputScreen(title=i18n["title"]["settings"], inputs=settings_info, submit_btn_text=i18n["button"]["save"]),
+            InputScreen(title=i18n[KEY_TITLE][KEY_SETTINGS], inputs=settings_info, submit_btn_text=i18n[KEY_BUTTON][KEY_SAVE]),
             callback=callback,
         )
 
-    def action_help_screen(self):
+    def action_help(self):
         self.push_screen(HelpScreen())
 
-    def action_about_screen(self):
+    def action_about(self):
         self.push_screen(AboutScreen())

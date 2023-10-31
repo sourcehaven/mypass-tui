@@ -138,9 +138,6 @@ class User:
     def vault_update(self, id, fields: dict[str, str | UserString]) -> dict[str, Any]:
         fields = {field: to_string(value) for field, value in fields.items()}
 
-        # TODO: This should be removed after tags are supported
-        fields.pop("tags")
-
         resp = requests.post(url=self.join_vault_url("update"), json={"id": id, "fields": fields}, auth=self.auth())
 
         if resp.status_code == 200:

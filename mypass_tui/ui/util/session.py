@@ -1,9 +1,14 @@
+import os
+import sys
+
 from textual.app import App
 
-from mypass_tui.globals import i18n, settings, user
+from mypass_tui.globals import i18n, settings, get_user
+from mypass_tui.localization import KEY_TITLE, KEY_SUBTITLE
 
 
 def _logout_user(logout: bool):
+    user = get_user()
     if user is not None and logout:
         user.logout()
 
@@ -19,7 +24,7 @@ def sign_out(app: App, logout=True):
     if settings.get("confirm_quit"):
         from mypass_tui.ui.screens import QuitScreen
 
-        app.push_screen(QuitScreen(i18n["title"]["sign_out"], i18n["subtitle"]["confirm_sign_out"]), callback=do_it)
+        app.push_screen(QuitScreen(i18n[KEY_TITLE]["sign_out"], i18n[KEY_SUBTITLE]["confirm_sign_out"]), callback=do_it)
     else:
         do_it()
 
@@ -36,3 +41,8 @@ def exit_app(app: App, logout=True):
         app.push_screen(QuitScreen(), callback=do_it)
     else:
         do_it()
+
+
+def restart_app(app: App):
+    app.exit()
+    os.execv(sys.executable, ['python'] + sys.argv)

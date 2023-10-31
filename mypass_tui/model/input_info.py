@@ -1,10 +1,13 @@
+import typing
 from dataclasses import dataclass
-
-from .password import Password
 
 
 @dataclass(slots=True)
-class InputInfo:
+class InputDetail:
     text: str
-    value: str | int | bool | list | Password | None
+    value: typing.Any
     required: bool
+
+
+def get_id_with_text(inputs: dict[str, InputDetail]):
+    return {id: inp.value for id, inp in inputs.items()}

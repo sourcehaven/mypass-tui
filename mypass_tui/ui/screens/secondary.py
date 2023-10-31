@@ -7,12 +7,13 @@ from textual.screen import ModalScreen
 from textual.widgets import Button, Label
 
 from mypass_tui.globals import i18n, bindings
+from mypass_tui.localization import KEY_BUTTON, KEY_POP_SCREEN
 from mypass_tui.ui.widgets import ButtonPair
 
 
 class SecondaryScreen(ModalScreen):
     BINDINGS = [
-        Binding(bindings["pop_screen"], "pop_screen", "Quit", show=False),
+        Binding(bindings[KEY_POP_SCREEN], KEY_POP_SCREEN, "Quit", show=False),
     ]
 
     DEFAULT_CSS = """
@@ -34,15 +35,15 @@ class SecondaryScreen(ModalScreen):
         yield Container(*self._compose(), id="secondary")
 
     def action_pop_screen(self):
-        self.dismiss(None)
+        self.dismiss()
 
 
 class DialogScreen(SecondaryScreen):
     def __init__(
         self,
         title: str,
-        submit_btn_text: str = i18n["button"]["submit"],
-        cancel_btn_text: str = i18n["button"]["cancel"],
+        submit_btn_text: str = i18n[KEY_BUTTON]["submit"],
+        cancel_btn_text: str = i18n[KEY_BUTTON]["cancel"],
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,

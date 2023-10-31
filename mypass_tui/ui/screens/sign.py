@@ -8,6 +8,8 @@ from mypass_tui.exception.api import ApiException
 from mypass_tui.exception.validator import RequiredException, ValidatorException
 
 from mypass_tui.globals import i18n, bindings, set_user
+from mypass_tui.localization import KEY_LABEL, KEY_BUTTON, KEY_TAB, KEY_TITLE, KEY_FOOTER, KEY_QUIT, KEY_SIGNIN, \
+    KEY_SIGNUP
 from mypass_tui.model.user import User, EMAIL, LASTNAME, FIRSTNAME, PASSWORD, USERNAME
 from mypass_tui.ui.util.scrape import clear_inputs, scrape_inputs
 from mypass_tui.ui.util.session import exit_app
@@ -16,88 +18,88 @@ from mypass_tui.ui.widgets import ButtonPair, EpicInput, Feedback, InputLabel, L
 
 class SignScreen(Screen):
     BINDINGS = [
-        Binding(bindings["sign_in"], "signin_tab", i18n["footer"]["sign_in"], show=True),
-        Binding(bindings["sign_up"], "signup_tab", i18n["footer"]["sign_up"], show=True),
+        Binding(bindings[KEY_SIGNIN], KEY_SIGNIN, i18n[KEY_FOOTER][KEY_SIGNIN], show=True),
+        Binding(bindings[KEY_SIGNUP], KEY_SIGNUP, i18n[KEY_FOOTER][KEY_SIGNUP], show=True),
     ]
 
     def compose(self) -> ComposeResult:
-        with TabbedContent(initial="signin_tab", id="sign_tab"):
-            with TabPane(i18n["tab"]["sign_in"], id="signin_tab"):
-                yield Label(i18n["title"]["sign_in"], classes="title")
+        with TabbedContent(initial=KEY_SIGNIN, id="sign_tab"):
+            with TabPane(i18n[KEY_TAB][KEY_SIGNIN], id="sign_in"):
+                yield Label(i18n[KEY_TITLE][KEY_SIGNIN], classes="title")
                 yield ScrollableContainer(
                     LabeledInput(
-                        InputLabel(i18n["label"]["username"], required=True),
+                        InputLabel(i18n[KEY_LABEL]["username"], required=True),
                         EpicInput(
-                            id=USERNAME, placeholder=i18n.placeholder("sign_in", "username"), classes="labeled_input"
+                            id=f"{KEY_SIGNIN}_{USERNAME}", placeholder=i18n.placeholder(KEY_SIGNIN, USERNAME), classes="labeled_input"
                         ),
                     ),
                     LabeledInput(
-                        InputLabel(i18n["label"]["password"], required=True),
+                        InputLabel(i18n[KEY_LABEL]["password"], required=True),
                         Password(
-                            id=PASSWORD, placeholder=i18n.placeholder("sign_in", "password"), classes="labeled_input"
+                            id=f"{KEY_SIGNIN}_{PASSWORD}", placeholder=i18n.placeholder(KEY_SIGNIN, PASSWORD), classes="labeled_input"
                         ),
                     ),
                     id="signin_input_container",
                 )
                 yield ButtonPair(
-                    left_text=i18n["button"]["sign_in"],
-                    right_text=i18n["button"]["quit"],
+                    left_text=i18n[KEY_BUTTON][KEY_SIGNIN],
+                    right_text=i18n[KEY_BUTTON][KEY_QUIT],
                     left_callback=self.on_signin_pressed,
                     right_callback=self.on_exit_pressed,
                 )
                 yield Feedback(id="signin_feedback")
-            with TabPane(i18n["tab"]["sign_up"], id="signup_tab"):
+            with TabPane(i18n[KEY_TAB][KEY_SIGNUP], id="sign_up"):
                 signup_pw_strength = PasswordStrength()
-                yield Label(i18n["title"]["sign_up"], classes="title")
+                yield Label(i18n[KEY_TITLE][KEY_SIGNUP], classes="title")
                 yield ScrollableContainer(
                     LabeledInput(
-                        InputLabel(i18n["label"]["username"], required=True),
+                        InputLabel(i18n[KEY_LABEL]["username"], required=True),
                         EpicInput(
-                            id=USERNAME, placeholder=i18n.placeholder("sign_up", "username"), classes="labeled_input"
+                            id=f"{KEY_SIGNUP}_{USERNAME}", placeholder=i18n.placeholder(KEY_SIGNUP, USERNAME), classes="labeled_input"
                         ),
                     ),
                     LabeledInput(
-                        InputLabel(i18n["label"]["password"], required=True),
+                        InputLabel(i18n[KEY_LABEL]["password"], required=True),
                         Password(
-                            id=PASSWORD,
-                            placeholder=i18n.placeholder("sign_up", "password"),
+                            id=f"{KEY_SIGNUP}_{PASSWORD}",
+                            placeholder=i18n.placeholder(KEY_SIGNUP, PASSWORD),
                             classes="labeled_input",
                             strength_bar=signup_pw_strength,
                         ),
                     ),
                     signup_pw_strength,
                     LabeledInput(
-                        InputLabel(i18n["label"]["firstname"]),
+                        InputLabel(i18n[KEY_LABEL]["firstname"]),
                         EpicInput(
-                            id=FIRSTNAME, placeholder=i18n.placeholder("sign_up", "firstname"), classes="labeled_input"
+                            id=f"{KEY_SIGNUP}_{FIRSTNAME}", placeholder=i18n.placeholder(KEY_SIGNUP, FIRSTNAME), classes="labeled_input"
                         ),
                     ),
                     LabeledInput(
-                        InputLabel(i18n["label"]["lastname"]),
+                        InputLabel(i18n[KEY_LABEL]["lastname"]),
                         EpicInput(
-                            id=LASTNAME, placeholder=i18n.placeholder("sign_up", "lastname"), classes="labeled_input"
+                            id=f"{KEY_SIGNUP}_{LASTNAME}", placeholder=i18n.placeholder(KEY_SIGNUP, LASTNAME), classes="labeled_input"
                         ),
                     ),
                     LabeledInput(
-                        InputLabel(i18n["label"]["email"]),
-                        EpicInput(id=EMAIL, placeholder=i18n.placeholder("sign_up", "email"), classes="labeled_input"),
+                        InputLabel(i18n[KEY_LABEL]["email"]),
+                        EpicInput(id=f"{KEY_SIGNUP}_{EMAIL}", placeholder=i18n.placeholder(KEY_SIGNUP, EMAIL), classes="labeled_input"),
                     ),
                     id="signup_input_container",
                 )
                 yield ButtonPair(
-                    left_text=i18n["button"]["sign_up"],
-                    right_text=i18n["button"]["quit"],
+                    left_text=i18n[KEY_BUTTON][KEY_SIGNUP],
+                    right_text=i18n[KEY_BUTTON][KEY_QUIT],
                     left_callback=self.on_signup_pressed,
                     right_callback=self.on_exit_pressed,
                 )
                 yield Feedback(id="signup_feedback")
         yield Footer()
 
-    def action_signin_tab(self):
-        self.query_one(TabbedContent).active = "signin_tab"
+    def action_signin(self):
+        self.query_one(TabbedContent).active = KEY_SIGNIN
 
-    def action_signup_tab(self):
-        self.query_one(TabbedContent).active = "signup_tab"
+    def action_signup(self):
+        self.query_one(TabbedContent).active = KEY_SIGNUP
 
     @Feedback.on_error(ApiException, ValidatorException, selector="#signin_feedback")
     def on_signin_pressed(self, _: Button.Pressed):
@@ -107,12 +109,11 @@ class SignScreen(Screen):
         if invalid_fields:
             raise RequiredException(invalid_fields)
         else:
-            inputs = {key: val for key, val in scrape_inputs(tab).items()}
+            inputs = {id.replace(KEY_SIGNIN + "_", ""): inp.value for id, inp in scrape_inputs(tab).items()}
             user = User.login(**inputs)
             set_user(user)
 
             from .main import MainScreen
-
             self.app.switch_screen(MainScreen())
 
     @Feedback.on_error(ApiException, ValidatorException, selector="#signup_feedback")
@@ -125,7 +126,7 @@ class SignScreen(Screen):
         else:
             from .token import TokenScreen
 
-            inputs = {key: val for key, val in scrape_inputs(tab).items()}
+            inputs = {id.replace(KEY_SIGNUP + "_", ""): inp.value for id, inp in scrape_inputs(tab).items()}
             clear_inputs(tab)
             user, token = User.registration(**inputs)
             set_user(user)

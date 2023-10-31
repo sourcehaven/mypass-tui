@@ -10,7 +10,7 @@ from textual.widgets import Input, Label, ProgressBar, Static
 import mypass_tui.model.password as mpw
 from mypass_tui.globals import i18n, bindings, settings
 
-from mypass_tui.localization import fill_placeholders, select_placeholder
+from mypass_tui.localization import fill_placeholders, select_placeholder, KEY_SUBTITLE
 from mypass_tui.ui.widgets.epic_input import EpicInput
 
 
@@ -83,7 +83,7 @@ class Password(EpicInput):
         show_hide_index = 0 if show else 1
         self.border_subtitle = (
             select_placeholder(
-                fill_placeholders(i18n["subtitle"]["show_hide_password"],bindings["password_visibility"])
+                fill_placeholders(i18n[KEY_SUBTITLE]["show_hide_password"], bindings["password_visibility"])
                 , show_hide_index
             )
         )

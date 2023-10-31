@@ -4,7 +4,8 @@ from textual.widgets import Button, Select, Switch
 import mypass_tui.model.password as mpw
 from mypass_tui.exception.validator import RequiredException, ValidatorException
 from mypass_tui.globals import i18n
-from mypass_tui.model import InputInfo, DefaultList
+from mypass_tui.localization import KEY_BUTTON
+from mypass_tui.model import InputDetail, DefaultList
 from mypass_tui.ui.screens import DialogScreen
 from mypass_tui.ui.widgets import EpicInput, Feedback, Password, InputLabel, LabeledInput
 
@@ -13,9 +14,9 @@ class InputScreen(DialogScreen):
     def __init__(
         self,
         title: str,
-        inputs: dict[str, InputInfo],
-        submit_btn_text: str = i18n["button"]["submit"],
-        cancel_btn_text: str = i18n["button"]["cancel"],
+        inputs: dict[str, InputDetail],
+        submit_btn_text: str = i18n[KEY_BUTTON]["submit"],
+        cancel_btn_text: str = i18n[KEY_BUTTON]["cancel"],
         name: str | None = None,
         id: str | None = None,
         classes: str | None = None,

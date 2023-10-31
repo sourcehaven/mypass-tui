@@ -3,6 +3,7 @@ from .about import AboutScreen, ABOUT_PAGE_ID
 from .help import HelpScreen, HELP_PAGE_ID
 from .input import InputScreen
 from .quit import QuitScreen
+from .restart import RestartScreen
 from .sign import SignScreen
 from .token import TokenScreen
 from .new import NewEntryPage, NEW_PAGE_ID

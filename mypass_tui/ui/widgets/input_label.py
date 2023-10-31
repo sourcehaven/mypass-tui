@@ -18,10 +18,14 @@ class InputLabel(Label):
     def __init__(self, text: str, required: bool = False, length: int = 16):
         super().__init__()
         self.required = required
-        self.text = LabeledInput.format_field_text(text, length=length, required=required)
+        self._text = LabeledInput.format_field_text(text, length=length, required=required)
 
     def compose(self):
-        yield Label(self.text)
+        yield Label(self._text)
+
+    @property
+    def text(self):
+        return self._text.replace(REQUIRED_TEXT, "").strip()
 
 
 class LabeledInput(Static):

@@ -1,6 +1,7 @@
 from typing import ClassVar, Iterable, Literal
 
 import pyperclip
+from rich.console import RenderableType
 from rich.highlighter import Highlighter
 from textual.binding import Binding, BindingType
 from textual.suggester import Suggester
@@ -8,7 +9,7 @@ from textual.validation import Validator
 from textual.widgets import Input
 
 from mypass_tui.globals import i18n, bindings
-from mypass_tui.localization import fill_placeholders
+from mypass_tui.localization import fill_placeholders, KEY_LABEL, KEY_FEEDBACK
 from mypass_tui.ui.util.query import query_active_tab
 from mypass_tui.ui.widgets import Feedback
 
@@ -63,14 +64,14 @@ class EpicInput(Input):
         self.value = ""
         Feedback.info(
             query_active_tab(self.screen),
-            fill_placeholders(i18n["feedback"]["info"]["cut"], i18n["label"][self.id])
+            fill_placeholders(i18n[KEY_FEEDBACK]["info"]["cut"], i18n[KEY_LABEL][self.id])
         )
 
     def action_copy(self):
         pyperclip.copy(self.value)
         Feedback.info(
             query_active_tab(self.screen),
-            fill_placeholders(i18n["feedback"]["info"]["copy"], i18n["label"][self.id])
+            fill_placeholders(i18n[KEY_FEEDBACK]["info"]["copy"], i18n[KEY_LABEL][self.id])
         )
 
     def action_paste(self):

@@ -1,3 +1,4 @@
+from mypass_tui.localization import KEY_TITLE
 from mypass_tui.ui.screens import SecondaryScreen
 
 from textual.app import ComposeResult
@@ -10,7 +11,7 @@ HELP_PAGE_ID = "help_page"
 
 class HelpPage(Static):
     def compose(self) -> ComposeResult:
-        yield Label(i18n["title"]["help"], classes="title")
+        yield Label(i18n[KEY_TITLE]["help"], classes="title")
 
 
 class HelpScreen(SecondaryScreen):

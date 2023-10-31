@@ -7,8 +7,9 @@ from textual.binding import Binding
 from textual.widgets import DataTable
 from textual.widgets._data_table import RowKey
 
-from mypass_tui.globals import i18n, bindings, user
-from mypass_tui.model.input_info import InputInfo
+from mypass_tui.globals import i18n, bindings, get_user
+from mypass_tui.localization import KEY_TITLE
+from mypass_tui.model.input_info import InputDetail, get_id_with_text
 from mypass_tui.model.password import Password
 from mypass_tui.model.vault_entry import VaultEntry
 from mypass_tui.utils.string import to_string
@@ -72,7 +73,7 @@ class VaultTable(DataTable):
             disabled=disabled,
         )
 
-        for label, column_key in zip(VaultEntry.TRANSLATED_FIELDS, VaultEntry.API_FIELDS):
+        for label, column_key in zip(i18n.vault_entry_labels(), VaultEntry.API_FIELDS):
             self.add_column(label=label, key=column_key)
 
         self.row_counter = 1
@@ -94,7 +95,8 @@ class VaultTable(DataTable):
             self.vault_entries[key] = entry
             self.row_counter += 1
 
-    def update_cells(self, id: str, fields: dict[str, str | UserString]):
+    def update_cells(self, id: str, details: dict[str, InputDetail]):
+        fields = get_id_with_text(details)
         for column_key, cell_value in fields.items():
             self.update_cell(
                 row_key=id,
@@ -103,13 +105,13 @@ class VaultTable(DataTable):
                 update_width=True,
             )
 
-        user.vault_update(id=id, fields=fields)
+        get_user().vault_update(id=id, fields=fields)
 
     def on_data_table_cell_selected(self, selected_cell: DataTable.CellSelected):
         row_key = selected_cell.cell_key.row_key
         column_key = selected_cell.cell_key.column_key
 
-        inputs = {column_key.value: InputInfo(
+        inputs = {column_key.value: InputDetail(
             text=self.column_labels[self.column_keys.index(column_key.value)],
             value=selected_cell.value,
             required=VaultEntry.REQUIRED[self.cursor_column],
@@ -117,7 +119,7 @@ class VaultTable(DataTable):
         from mypass_tui.ui.screens import InputScreen
 
         self.app.push_screen(
-            InputScreen(title=i18n["title"]["edit"], inputs=inputs),
+            InputScreen(title=i18n[KEY_TITLE]["edit"], inputs=inputs),
             callback=callback(row_key)(self.update_cells),
         )
 
@@ -126,13 +128,13 @@ class VaultTable(DataTable):
 
         values = self.get_row_at(selected_row.cursor_row)
         inputs = {
-            id: InputInfo(text=col, value=val, required=req)
+            id: InputDetail(text=col, value=val, required=req)
             for id, col, val, req in zip(self.column_keys, self.column_labels, values, VaultEntry.REQUIRED)
         }
         from mypass_tui.ui.screens import InputScreen
 
         self.app.push_screen(
-            InputScreen(title=i18n["title"]["edit"], inputs=inputs),
+            InputScreen(title=i18n[KEY_TITLE]["edit"], inputs=inputs),
             callback=callback(row_key)(self.update_cells),
         )
 
