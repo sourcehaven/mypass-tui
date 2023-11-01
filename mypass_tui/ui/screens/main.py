@@ -3,7 +3,7 @@ from textual.screen import Screen
 from textual.widgets import Footer, TabbedContent, TabPane
 
 from mypass_tui.globals import i18n, bindings
-from mypass_tui.localization import KEY_FOOTER, KEY_TAB
+from mypass_tui.localization import KEY_FOOTER, KEY_TAB, KEY_SIGN_OUT
 from mypass_tui.ui.screens import (
     NEW_PAGE_ID,
     TABLE_PAGE_ID,
@@ -21,7 +21,7 @@ class MainScreen(Screen):
         Binding(bindings["vault_new"], NEW_PAGE_ID, i18n[KEY_FOOTER]["new"]),
         Binding(bindings["vault_table"], TABLE_PAGE_ID, i18n[KEY_FOOTER]["table"]),
         Binding(bindings["vault_folder"], FOLDER_PAGE_ID, i18n[KEY_FOOTER]["folder"]),
-        Binding(bindings["sign_out"], "signout"),
+        Binding(bindings[KEY_SIGN_OUT], KEY_SIGN_OUT),
     ]
 
     def compose(self):
@@ -46,5 +46,5 @@ class MainScreen(Screen):
     def action_folder_page(self):
         self._set_active_tab(FOLDER_PAGE_ID)
 
-    def action_signout(self):
+    def action_sign_out(self):
         sign_out(self.app)

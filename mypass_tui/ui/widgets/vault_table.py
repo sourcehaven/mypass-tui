@@ -1,4 +1,3 @@
-from collections import UserString
 from itertools import cycle
 from typing import Callable, Iterable, Literal
 
@@ -156,5 +155,4 @@ class VaultTable(DataTable):
     def action_password_visibility(self):
         value = self.get_cell_at(self.cursor_coordinate)
         if isinstance(value, Password):
-            value.toggle()
-            self.update_cell_at(self.cursor_coordinate, value, update_width=True)
+            self.update_cell_at(self.cursor_coordinate, value.toggle, update_width=True)

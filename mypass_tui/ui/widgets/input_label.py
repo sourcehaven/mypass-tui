@@ -54,7 +54,7 @@ class LabeledInput(Static):
         if isinstance(self.input, wpw.Password):
             import mypass_tui.model.password as mpw
 
-            return mpw.Password(self.input.value, hide=self.input.password)
+            return mpw.Password.create(self.input.value, hide=self.input.password)
         if isinstance(self.input, Input):
             return self.input.value
         if isinstance(self.input, TextArea):

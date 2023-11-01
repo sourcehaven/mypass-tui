@@ -45,10 +45,10 @@ class InputScreen(DialogScreen):
 
             if isinstance(value, DefaultList):
                 input_widget = Select(id=id, options=[(val, val) for val in value], value=value.default_value, allow_blank=False, classes="labeled_input")
+            elif isinstance(value, mpw.Password):
+                input_widget = Password(id=id, value=value.visible, password=value.is_hidden, classes="labeled_input")
             elif isinstance(value, str):
                 input_widget = EpicInput(id=id, value=value, classes="labeled_input")
-            elif isinstance(value, mpw.Password):
-                input_widget = Password(id=id, value=value.data, password=value.is_hidden, classes="labeled_input")
             elif isinstance(value, bool):
                 input_widget = Switch(id=id, value=value, animate=True)
             else:
@@ -73,5 +73,5 @@ class InputScreen(DialogScreen):
         else:
             from mypass_tui.ui.util.scrape import scrape_inputs
 
-            inputs = scrape_inputs(self, password_to_string=False)
+            inputs = scrape_inputs(self)
             self.dismiss(inputs)

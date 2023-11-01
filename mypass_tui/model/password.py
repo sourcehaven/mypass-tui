@@ -1,22 +1,36 @@
-from collections import UserString
 from enum import Enum
 
 
-class Password(UserString):
-    mask = "••••••••"
+class Password(str):
+    mask = "••••••"
 
-    def __init__(self, _value: str, /, hide=True):
-        if _value is None:
-            _value = ""
+    @classmethod
+    def create(cls, val: str, hide: bool):
+        if hide:
+            return cls.create_hidden(val)
+        return cls.create_visible(val)
 
-        super().__init__(_value)
-        self.is_hidden = hide
+    @classmethod
+    def create_hidden(cls, val: str):
+        return cls(cls.mask, val, hide=True)
 
-    def __str__(self):
-        return Password.mask if self.is_hidden else self.data
+    @classmethod
+    def create_visible(cls, val: str):
+        return cls(val, cls.mask, hide=False)
 
+    def __new__(cls, val: str, next_val: str, hide: bool):
+        instance = super().__new__(cls, val)
+        instance.next_val = next_val
+        instance.is_hidden = hide
+        return instance
+
+    @property
     def toggle(self):
-        self.is_hidden = not self.is_hidden
+        return Password(val=self.next_val, next_val=self, hide=not self.is_hidden)
+
+    @property
+    def visible(self):
+        return self.toggle if self.is_hidden else self
 
 
 class PasswordStrength(Enum):

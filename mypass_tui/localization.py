@@ -7,9 +7,10 @@ import yaml
 
 from mypass_tui.paths import I18N_PATH
 
-KEY_SIGNIN: Final = "sign_in"
-KEY_SIGNOUT: Final = "sign_out"
-KEY_SIGNUP: Final = "sign_up"
+KEY_SIGN_IN: Final = "sign_in"
+KEY_SIGN_OUT: Final = "sign_out"
+KEY_SIGN_UP: Final = "sign_up"
+KEY_CONFIRM_SIGN_OUT: Final = "confirm_sign_out"
 KEY_LABEL: Final = "label"
 KEY_FOOTER: Final = "footer"
 KEY_BUTTON: Final = "button"

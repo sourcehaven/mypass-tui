@@ -99,7 +99,7 @@ class VaultEntry:
 
         password = data.pop(PASSWORD, None)
         if password and isinstance(password, str):
-            password = Password(password, hide_password)
+            password = Password.create(password, hide_password)
 
         return cls(**data, password=password, created_at=created_at, deleted_at=deleted_at)
 

@@ -1,12 +1,11 @@
 import re
-from collections import UserString
 from typing import SupportsIndex
 
 
-def to_string(val: str | UserString):
-    if isinstance(val, UserString):
-        return val.data
-    return val
+def to_string(val: str | None):
+    if val is None:
+        return ""
+    return str(val)
 
 
 def rreplace(s: str, __old: str, __new: str, __count: SupportsIndex = 1):

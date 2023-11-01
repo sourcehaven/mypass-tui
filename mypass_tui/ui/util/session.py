@@ -4,7 +4,7 @@ import sys
 from textual.app import App
 
 from mypass_tui.globals import i18n, settings, get_user
-from mypass_tui.localization import KEY_TITLE, KEY_SUBTITLE
+from mypass_tui.localization import KEY_TITLE, KEY_SUBTITLE, KEY_SIGN_OUT, KEY_CONFIRM_SIGN_OUT
 
 
 def _logout_user(logout: bool):
@@ -24,7 +24,7 @@ def sign_out(app: App, logout=True):
     if settings.get("confirm_quit"):
         from mypass_tui.ui.screens import QuitScreen
 
-        app.push_screen(QuitScreen(i18n[KEY_TITLE]["sign_out"], i18n[KEY_SUBTITLE]["confirm_sign_out"]), callback=do_it)
+        app.push_screen(QuitScreen(i18n[KEY_TITLE][KEY_SIGN_OUT], i18n[KEY_SUBTITLE][KEY_CONFIRM_SIGN_OUT]), callback=do_it)
     else:
         do_it()
 

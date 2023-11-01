@@ -1,4 +1,3 @@
-from collections import UserString
 from typing import Any, Final
 from urllib.parse import urljoin
 
@@ -135,7 +134,7 @@ class User:
         else:
             raise Exception(resp.json())
 
-    def vault_update(self, id, fields: dict[str, str | UserString]) -> dict[str, Any]:
+    def vault_update(self, id, fields: dict[str, str]) -> dict[str, Any]:
         fields = {field: to_string(value) for field, value in fields.items()}
 
         resp = requests.post(url=self.join_vault_url("update"), json={"id": id, "fields": fields}, auth=self.auth())
